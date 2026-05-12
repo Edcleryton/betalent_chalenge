@@ -1,0 +1,23 @@
+{
+  "name": "betalent-qa-test-api",
+  "version": "1.0.0",
+  "description": "API testing project for BeTalent test using Postman and Newman",
+  "main": "index.js",
+  "scripts": {
+    "test": "newman run api-automation/restful-booker.postman_collection.json -e api-automation/restful-booker.postman_environment.json --reporters cli,htmlextra --reporter-htmlextra-export reports/report.html",
+    "test:cli": "newman run api-automation/restful-booker.postman_collection.json -e api-automation/restful-booker.postman_environment.json --reporters cli"
+  },
+  "keywords": [
+    "qa",
+    "test",
+    "api",
+    "postman",
+    "newman"
+  ],
+  "author": "Edcleryton Silva",
+  "license": "ISC",
+  "devDependencies": {
+    "newman": "^6.1.2",
+    "newman-reporter-htmlextra": "^1.22.11"
+  }
+}
