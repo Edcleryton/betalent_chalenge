@@ -12,14 +12,8 @@ playwright/.auth/
 test-results/
 playwright-report/
 
-# ── Ferramenta de desenvolvimento (não faz parte da entrega) ──────────────────
-.claude/
-
 # ── PDFs (enunciado do desafio e docs de referência) ─────────────────────────
 *.pdf
-
-# ── Arquivos temporários e rascunhos ─────────────────────────────────────────
-teste api/api.txt
 
 # ── Relatórios gerados (cobertos pelo .gitignore interno de teste api/) ───────
 teste api/reports/
