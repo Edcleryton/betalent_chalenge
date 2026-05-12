@@ -106,11 +106,11 @@ Este repositório contém a solução completa para o teste prático de QA da Be
 
 | Dependência | Versão mínima | Verificação |
 |---|---|---|
-| Node.js | 18.x | `node --version` |
+| Node.js | 19.x | `node --version` |
 | npm | 9.x | `npm --version` |
 | Git | 2.x | `git --version` |
 
-> Para os testes de API com Postman/Newman, o Node.js 18+ é obrigatório.
+> Para os testes de API com Postman/Newman, o Node.js 19+ é obrigatório.
 
 ---
 
