@@ -25,6 +25,41 @@
 
 ---
 
+## Início Rápido
+
+> Passos mínimos para clonar e rodar os testes do zero.
+
+```bash
+# 1. Clonar o repositório
+git clone https://github.com/Edcleryton/betalent_chalenge.git
+cd betalent_chalenge
+
+# 2. Instalar dependências do Playwright
+npm install
+npx playwright install
+
+# 3. Criar o arquivo de variáveis de ambiente na raiz
+echo "API_URL=https://restful-booker.herokuapp.com" > .env
+echo "API_USER=admin" >> .env
+echo "API_PASSWORD=password123" >> .env
+
+# 4. Rodar todos os testes (UI + API)
+npx playwright test
+
+# 5. Ver relatório
+npx playwright show-report
+```
+
+Para a suíte Newman/Postman (pasta `teste api/`):
+
+```bash
+cd "teste api"
+npm install
+npm test          # executa + gera reports/report.html
+```
+
+---
+
 ## 1. Visão Geral
 
 Este repositório contém a solução completa para o teste prático de QA da BeTalent, cobrindo automação de UI e de API. O objetivo é demonstrar capacidade analítica, cobertura de testes, pensamento crítico e organização técnica.
@@ -79,37 +114,44 @@ Este repositório contém a solução completa para o teste prático de QA da Be
 
 ---
 
-## 4. Instalação
+## 4. Instalação — Passo a Passo
 
-### 4.1 Clonar o repositório
+### Suíte UI + API (Playwright)
+
+**Passo 1 — Clonar o repositório**
 
 ```bash
 git clone https://github.com/Edcleryton/betalent_chalenge.git
 cd betalent_chalenge
 ```
 
-### 4.2 Instalar dependências — Testes de UI (Playwright)
+**Passo 2 — Instalar dependências Node.js**
 
 ```bash
 npm install
+```
+
+Saída esperada: `added N packages` sem erros.
+
+**Passo 3 — Instalar os navegadores do Playwright**
+
+```bash
 npx playwright install
 ```
 
-### 4.3 Instalar dependências — Testes de API (Newman)
+Saída esperada: download dos browsers Chromium, Firefox e WebKit. Pode levar alguns minutos na primeira execução.
+
+**Passo 4 — Verificar a instalação**
 
 ```bash
-cd "teste api"
-npm install
-cd ..
+npx playwright --version
 ```
 
----
+Saída esperada: `Version 1.44.x` (ou superior).
 
-## 5. Configuração
+**Passo 5 — Criar o arquivo de variáveis de ambiente**
 
-### 5.1 Variáveis de ambiente (UI + API Playwright)
-
-Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
+Na raiz do projeto, crie o arquivo `.env` com o conteúdo abaixo:
 
 ```env
 API_URL=https://restful-booker.herokuapp.com
@@ -117,58 +159,140 @@ API_USER=admin
 API_PASSWORD=password123
 ```
 
-> O arquivo `.env` não é versionado por segurança. As variáveis acima são as credenciais públicas do ambiente de teste do Restful-Booker.
+> As credenciais acima são públicas e fazem parte da documentação oficial do Restful-Booker. O arquivo `.env` não é versionado.
 
-### 5.2 Variáveis de ambiente (Newman/Postman)
+---
 
-O arquivo `teste api/api-automation/restful-booker.postman_environment.json` já contém todas as variáveis necessárias para execução da coleção Postman. Nenhuma configuração adicional é necessária.
+### Suíte API — Newman/Postman
+
+**Passo 1 — Entrar na pasta da suíte**
+
+```bash
+cd "teste api"
+```
+
+**Passo 2 — Instalar dependências**
+
+```bash
+npm install
+```
+
+**Passo 3 — Verificar o Newman**
+
+```bash
+npx newman --version
+```
+
+Saída esperada: `6.x.x`
+
+**Passo 4 — Voltar à raiz (se quiser rodar as duas suítes)**
+
+```bash
+cd ..
+```
+
+---
+
+## 5. Configuração
+
+### 5.1 Resumo das variáveis de ambiente
+
+| Variável | Valor | Onde é usado |
+|---|---|---|
+| `API_URL` | `https://restful-booker.herokuapp.com` | Playwright API tests |
+| `API_USER` | `admin` | Geração de token |
+| `API_PASSWORD` | `password123` | Geração de token |
+
+### 5.2 Configuração Newman/Postman
+
+O arquivo `teste api/api-automation/restful-booker.postman_environment.json` já está preenchido com todas as variáveis. **Nenhuma configuração adicional** é necessária para a suíte Newman.
+
+Para usar no Postman GUI:
+1. Abra o Postman
+2. Clique em **Import**
+3. Importe `api-automation/restful-booker.postman_collection.json`
+4. Importe `api-automation/restful-booker.postman_environment.json`
+5. Selecione o ambiente **Restful-Booker-Env** no canto superior direito
+6. Clique em **Run collection**
 
 ---
 
 ## 6. Execução dos Testes
 
-### 6.1 Testes de UI — Playwright
+### 6.1 Testes de UI + API — Playwright
+
+**Rodar tudo (recomendado para validação completa):**
 
 ```bash
-# Todos os testes (UI + API)
 npx playwright test
+```
 
-# Apenas testes de UI
+**Rodar apenas UI (Sauce Demo):**
+
+```bash
 npx playwright test tests/ui
+```
 
-# Apenas testes de API (Playwright)
-npx playwright test tests/api
+**Rodar apenas os testes por tipo de usuário:**
 
-# Testes por tipo de usuário (suíte estendida)
+```bash
 npx playwright test tests/ui/saucedemo-users.spec.ts
+```
 
-# Modo visual interativo (debug)
+**Rodar apenas API (Restful-Booker via Playwright):**
+
+```bash
+npx playwright test tests/api
+```
+
+**Modo debug com interface visual (útil para inspecionar falhas):**
+
+```bash
 npx playwright test --ui
+```
 
-# Relatório HTML após execução
+**Ver relatório HTML após a execução:**
+
+```bash
 npx playwright show-report
 ```
 
-### 6.2 Testes de API — Newman (Postman)
+> O relatório fica em `playwright-report/index.html`. Cada teste tem screenshot e vídeo gravados automaticamente em caso de falha.
+
+---
+
+### 6.2 Testes de API — Newman/Postman
 
 ```bash
 cd "teste api"
 
-# Executar coleção completa
+# Executar suíte completa + gerar relatório HTML
 npm test
 
-# Gerar relatório HTML
-npm run report
+# Apenas CLI sem relatório
+npm run test:cli
 ```
+
+Após `npm test`, abra `teste api/reports/report.html` no browser para ver o relatório visual completo com todas as 53 asserções.
+
+---
 
 ### 6.3 Projetos disponíveis no Playwright
 
-| Projeto | Navegador / Dispositivo | Auth |
+| Projeto | Navegador / Dispositivo | Observação |
 |---|---|---|
-| `chromium` | Desktop Chrome | standard_user (storageState) |
-| `Mobile Chrome` | Pixel 5 (Android) | standard_user (storageState) |
-| `Mobile Safari` | iPhone 12 (iOS) | standard_user (storageState) |
-| `api` | N/A (APIRequestContext) | via token .env |
+| `chromium` | Desktop Chrome 1280×720 | Projeto principal |
+| `Mobile Chrome` | Pixel 5 — Android | Responsividade |
+| `Mobile Safari` | iPhone 12 — iOS | Responsividade |
+| `api` | N/A (HTTP puro) | Testes de API |
+
+Para rodar um projeto específico:
+
+```bash
+npx playwright test --project=chromium
+npx playwright test --project="Mobile Chrome"
+npx playwright test --project=api
+```
 
 ---
 
