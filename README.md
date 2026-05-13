@@ -27,7 +27,7 @@
 
 ## Início Rápido
 
-> Passos mínimos para clonar e rodar os testes do zero.
+> Passos mínimos para clonar e rodar os testes do zero. Requer **Node.js 20.x LTS** ou superior instalado.
 
 ```bash
 # 1. Clonar o repositório
@@ -36,9 +36,9 @@ cd betalent_chalenge
 
 # 2. Instalar dependências do Playwright
 npm install
-npx playwright install
+npx playwright install   # baixa Chromium, Firefox e WebKit
 
-# 3. Criar o arquivo de variáveis de ambiente na raiz
+# 3. Criar o arquivo de variáveis de ambiente na raiz (obrigatório)
 echo "API_URL=https://restful-booker.herokuapp.com" > .env
 echo "API_USER=admin" >> .env
 echo "API_PASSWORD=password123" >> .env
@@ -53,9 +53,15 @@ npx playwright show-report
 Para a suíte Newman/Postman (pasta `teste api/`):
 
 ```bash
+# Instalar Newman e o reporter globalmente (uma vez por máquina)
+npm install -g newman
+npm install -g newman-reporter-htmlextra
+
+# Entrar na pasta, instalar dependências locais e rodar
 cd "teste api"
-npm install
-npm test          # executa + gera reports/report.html
+npm install              # instala versões exatas do projeto
+mkdir -p reports         # cria pasta para o relatório HTML
+npm test                 # executa + gera reports/report.html
 ```
 
 ---
@@ -104,13 +110,13 @@ Este repositório contém a solução completa para o teste prático de QA da Be
 
 ## 3. Pré-requisitos
 
-| Dependência | Versão mínima | Verificação |
-|---|---|---|
-| Node.js | 19.x | `node --version` |
-| npm | 9.x | `npm --version` |
-| Git | 2.x | `git --version` |
+| Dependência | Versão mínima recomendada | Download | Verificação |
+|---|---|---|---|
+| Node.js | **20.x LTS** (ou 22.x LTS) | https://nodejs.org/en/download | `node --version` |
+| npm | 10.x _(incluído com Node.js)_ | — | `npm --version` |
+| Git | 2.x | https://git-scm.com/downloads | `git --version` |
 
-> Para os testes de API com Postman/Newman, o Node.js 19+ é obrigatório.
+> Use sempre a versão **LTS (Long-Term Support)** do Node.js — é a versão estável com suporte de segurança ativo. Node.js 18 chegou ao fim de vida (EOL) em abril de 2025 e não recebe mais correções de segurança.
 
 ---
 
@@ -131,7 +137,16 @@ cd betalent_chalenge
 npm install
 ```
 
-Saída esperada: `added N packages` sem erros.
+Este comando instala as seguintes dependências declaradas no `package.json`:
+
+| Pacote | Finalidade |
+|---|---|
+| `@playwright/test` | Framework de testes E2E |
+| `@axe-core/playwright` | Acessibilidade automatizada (WCAG) |
+| `typescript` | Transpilação TypeScript (gerenciada automaticamente pelo Playwright) |
+| `dotenv` | Leitura das variáveis do arquivo `.env` |
+
+Saída esperada: linha `added X packages` sem erros de permissão ou conflito.
 
 **Passo 3 — Instalar os navegadores do Playwright**
 
@@ -140,6 +155,11 @@ npx playwright install
 ```
 
 Saída esperada: download dos browsers Chromium, Firefox e WebKit. Pode levar alguns minutos na primeira execução.
+
+> **Linux / WSL / CI:** use o comando abaixo em vez do anterior para instalar também as dependências de sistema necessárias pelos browsers:
+> ```bash
+> npx playwright install --with-deps
+> ```
 
 **Passo 4 — Verificar a instalação**
 
@@ -151,6 +171,8 @@ Saída esperada: `Version 1.44.x` (ou superior).
 
 **Passo 5 — Criar o arquivo de variáveis de ambiente**
 
+> **Atenção:** este arquivo é **obrigatório**. Sem ele, os testes de API falham com erro de variável indefinida.
+
 Na raiz do projeto, crie o arquivo `.env` com o conteúdo abaixo:
 
 ```env
@@ -159,33 +181,68 @@ API_USER=admin
 API_PASSWORD=password123
 ```
 
-> As credenciais acima são públicas e fazem parte da documentação oficial do Restful-Booker. O arquivo `.env` não é versionado.
+> As credenciais acima são públicas e fazem parte da documentação oficial do Restful-Booker. O arquivo `.env` não é versionado (está no `.gitignore`).
 
 ---
 
 ### Suíte API — Newman/Postman
 
-**Passo 1 — Entrar na pasta da suíte**
+> **O que é o Newman?** Newman é o runner de linha de comando do Postman. Ele é instalado via npm (que acompanha o Node.js) e permite executar coleções Postman diretamente no terminal, ideal para automação de testes de API e pipelines CI/CD.
+
+**Passo 1 — Instalar o Newman globalmente**
+
+```bash
+npm install -g newman
+```
+
+A instalação global torna o comando `newman` disponível em qualquer diretório do sistema.
+
+Saída esperada: linha `added X packages` sem erros.
+
+**Passo 2 — Instalar o reporter HTML (global)**
+
+```bash
+npm install -g newman-reporter-htmlextra
+```
+
+Necessário para gerar o relatório HTML visual após a execução dos testes.
+
+**Passo 3 — Verificar a instalação**
+
+```bash
+newman --version
+```
+
+Saída esperada: `6.x.x`
+
+**Passo 4 — Entrar na pasta da suíte**
 
 ```bash
 cd "teste api"
 ```
 
-**Passo 2 — Instalar dependências**
+> Esta pasta possui seu próprio `package.json` com as dependências locais do projeto. O passo seguinte instala também as versões exatas utilizadas neste projeto.
+
+**Passo 5 — Instalar dependências locais do projeto**
 
 ```bash
 npm install
 ```
 
-**Passo 3 — Verificar o Newman**
+| Pacote | Versão | Finalidade |
+|---|---|---|
+| `newman` | ^6.1.2 | Runner CLI do Postman |
+| `newman-reporter-htmlextra` | ^1.22.11 | Geração do relatório HTML |
+
+**Passo 6 — Criar a pasta de relatórios**
 
 ```bash
-npx newman --version
+mkdir -p reports
 ```
 
-Saída esperada: `6.x.x`
+> O relatório HTML é salvo em `teste api/reports/report.html`. Se a pasta não existir, o `npm test` falhará ao tentar escrever o arquivo.
 
-**Passo 4 — Voltar à raiz (se quiser rodar as duas suítes)**
+**Passo 7 — Voltar à raiz (se quiser rodar as duas suítes)**
 
 ```bash
 cd ..
@@ -269,11 +326,18 @@ cd "teste api"
 # Executar suíte completa + gerar relatório HTML
 npm test
 
-# Apenas CLI sem relatório
+# Apenas CLI sem relatório HTML (mais rápido para validação rápida)
 npm run test:cli
 ```
 
-Após `npm test`, abra `teste api/reports/report.html` no browser para ver o relatório visual completo com todas as 53 asserções.
+O que cada comando executa por baixo:
+
+| Comando | Equivalente Newman |
+|---|---|
+| `npm test` | `newman run ... --reporters cli,htmlextra --reporter-htmlextra-export reports/report.html` |
+| `npm run test:cli` | `newman run ... --reporters cli` |
+
+Após `npm test`, abra `teste api/reports/report.html` no browser para ver o relatório visual completo com todas as 53 asserções, tempo de resposta e detalhes de cada request.
 
 ---
 
