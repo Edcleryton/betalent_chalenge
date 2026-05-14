@@ -33,7 +33,6 @@ jobs:
 
       - name: Run Newman API tests
         id: run_tests
-        continue-on-error: true
         run: npm test
 
       - name: Upload HTML report
@@ -102,7 +101,7 @@ jobs:
             ${{ steps.run_tests.outcome != 'success' && '
             <p style="margin-top:12px;padding:10px;background:#fff8e1;border-left:4px solid #f9a825;font-size:13px">
               <b>ℹ️ Sobre as falhas:</b> os testes falharam porque assertam o comportamento
-              correto segundo a RFC — a API possui bugs conhecidos documentados que ainda
+              correto segundo a RFC — a API possui bugs conhecidos e documentados que ainda
               não foram corrigidos. O pipeline rodou normalmente; as falhas são sinais de
               rastreamento dos bugs, não erros de infraestrutura.
             </p>' || '' }}
