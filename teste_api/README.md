@@ -23,7 +23,7 @@ Suíte completa de testes de API para o desafio prático de QA da BeTalent, cobr
 ├── .github/
 │   └── workflows/
 │       └── api-tests.yml          # Pipeline CI/CD (GitHub Actions)
-├── api-automation/
+├── api_automation/
 │   ├── restful-booker.postman_collection.json   # Coleção Postman
 │   └── restful-booker.postman_environment.json  # Ambiente (variáveis)
 ├── docs/
@@ -72,12 +72,12 @@ npm run test:cli
 ### 4. Executar via Postman UI
 
 1. Abra o Postman.
-2. Importe `api-automation/restful-booker.postman_collection.json`.
-3. Importe `api-automation/restful-booker.postman_environment.json`.
+2. Importe `api_automation/restful-booker.postman_collection.json`.
+3. Importe `api_automation/restful-booker.postman_environment.json`.
 4. Selecione o ambiente **Restful-Booker-Env**.
 5. Execute com o **Collection Runner**.
 
-> Os arquivos da pasta `api-automation/` são o ponto de entrada tanto para o Newman quanto para o Postman GUI.
+> Os arquivos da pasta `api_automation/` são o ponto de entrada tanto para o Newman quanto para o Postman GUI.
 
 ---
 
