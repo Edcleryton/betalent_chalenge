@@ -39,9 +39,8 @@ npm install
 npx playwright install   # baixa Chromium, Firefox e WebKit
 
 # 3. Criar o arquivo de variáveis de ambiente na raiz (obrigatório)
-echo "API_URL=https://restful-booker.herokuapp.com" > .env
-echo "API_USER=admin" >> .env
-echo "API_PASSWORD=password123" >> .env
+cp .env.example .env
+# Ou manualmente: copie .env.example para .env — os valores padrão já funcionam
 
 # 4. Rodar todos os testes (UI + API)
 npx playwright test
@@ -50,7 +49,7 @@ npx playwright test
 npx playwright show-report
 ```
 
-Para a suíte Newman/Postman (pasta `teste api/`):
+Para a suíte Newman/Postman (pasta `teste_api/`):
 
 ```bash
 # Instalar Newman e o reporter globalmente (uma vez por máquina)
@@ -58,7 +57,7 @@ npm install -g newman
 npm install -g newman-reporter-htmlextra
 
 # Entrar na pasta, instalar dependências locais e rodar
-cd "teste api"
+cd teste_api
 npm install              # instala versões exatas do projeto
 mkdir -p reports         # cria pasta para o relatório HTML
 npm test                 # executa + gera reports/report.html
@@ -81,30 +80,11 @@ Este repositório contém a solução completa para o teste prático de QA da Be
 
 ## 2. Escopo
 
-### 2.1 UI Testing — Sauce Demo
+**UI (Sauce Demo):** todos os requisitos de Nível 1 e Nível 2 implementados — login, ordenação, checkout, carrinho, navegação, logout, responsividade (Mobile Chrome / Mobile Safari) e acessibilidade (WCAG via axe-core).
 
-| Nível | Requisito | Status |
-|---|---|---|
-| Nível 1 | Login com diferentes tipos de usuários | ✅ Implementado |
-| Nível 1 | Ordenação e filtragem de produtos | ✅ Implementado |
-| Nível 1 | Fluxo completo de compra (checkout) | ✅ Implementado |
-| Nível 1 | Remoção de itens do carrinho | ✅ Implementado |
-| Nível 1 | Navegação entre páginas | ✅ Implementado |
-| Nível 1 | Logout | ✅ Implementado |
-| Nível 2 | Testes de responsividade (Mobile/Desktop) | ✅ Implementado |
-| Nível 2 | Testes de acessibilidade (WCAG) | ✅ Implementado |
-| Nível 2 | Automação via scripts | ✅ Implementado |
+**API (Restful-Booker):** todos os requisitos de Nível 1 e Nível 2 implementados — auth, CRUD, PATCH, filtros, validação de campos, segurança (403 sem token), performance.
 
-### 2.2 API Testing — Restful-Booker
-
-| Nível | Requisito | Status |
-|---|---|---|
-| Nível 1 | Autenticação básica (token) | ✅ Implementado |
-| Nível 1 | CRUD de reservas | ✅ Implementado |
-| Nível 1 | Validação de campos obrigatórios | ✅ Implementado |
-| Nível 2 | Testes de performance (tempo de resposta) | ✅ Implementado |
-| Nível 2 | Testes de segurança (403 sem token) | ✅ Implementado |
-| Nível 2 | Automação via scripts (Newman + CI/CD) | ✅ Implementado |
+Cobertura detalhada, critérios de priorização e raciocínio de seleção: [`docs/UI_TEST_PLAN.md`](./docs/UI_TEST_PLAN.md) e [`docs/API_TEST_PLAN.md`](./docs/API_TEST_PLAN.md).
 
 ---
 
@@ -122,33 +102,13 @@ Este repositório contém a solução completa para o teste prático de QA da Be
 
 ## 4. Instalação — Passo a Passo
 
+> Para rodar rapidamente, use os comandos do [Início Rápido](#início-rápido). Esta seção detalha cada passo e o que esperar de saída.
+
 ### Suíte UI + API (Playwright)
 
-**Passo 1 — Clonar o repositório**
+**Passo 1 — Instalar os navegadores do Playwright**
 
-```bash
-git clone https://github.com/Edcleryton/betalent_chalenge.git
-cd betalent_chalenge
-```
-
-**Passo 2 — Instalar dependências Node.js**
-
-```bash
-npm install
-```
-
-Este comando instala as seguintes dependências declaradas no `package.json`:
-
-| Pacote | Finalidade |
-|---|---|
-| `@playwright/test` | Framework de testes E2E |
-| `@axe-core/playwright` | Acessibilidade automatizada (WCAG) |
-| `typescript` | Transpilação TypeScript (gerenciada automaticamente pelo Playwright) |
-| `dotenv` | Leitura das variáveis do arquivo `.env` |
-
-Saída esperada: linha `added X packages` sem erros de permissão ou conflito.
-
-**Passo 3 — Instalar os navegadores do Playwright**
+Após clonar o repositório e rodar `npm install` (ver Início Rápido):
 
 ```bash
 npx playwright install
@@ -218,7 +178,7 @@ Saída esperada: `6.x.x`
 **Passo 4 — Entrar na pasta da suíte**
 
 ```bash
-cd "teste api"
+cd teste_api
 ```
 
 > Esta pasta possui seu próprio `package.json` com as dependências locais do projeto. O passo seguinte instala também as versões exatas utilizadas neste projeto.
@@ -240,7 +200,7 @@ npm install
 mkdir -p reports
 ```
 
-> O relatório HTML é salvo em `teste api/reports/report.html`. Se a pasta não existir, o `npm test` falhará ao tentar escrever o arquivo.
+> O relatório HTML é salvo em `teste_api/reports/report.html`. Se a pasta não existir, o `npm test` falhará ao tentar escrever o arquivo.
 
 **Passo 7 — Voltar à raiz (se quiser rodar as duas suítes)**
 
@@ -259,16 +219,19 @@ cd ..
 | `API_URL` | `https://restful-booker.herokuapp.com` | Playwright API tests |
 | `API_USER` | `admin` | Geração de token |
 | `API_PASSWORD` | `password123` | Geração de token |
+| `UI_PASSWORD` | `secret_sauce` | Testes de UI — Sauce Demo |
+
+> Copie `.env.example` para `.env` — todos os valores padrão já estão preenchidos e prontos para uso local.
 
 ### 5.2 Configuração Newman/Postman
 
-O arquivo `teste api/api-automation/restful-booker.postman_environment.json` já está preenchido com todas as variáveis. **Nenhuma configuração adicional** é necessária para a suíte Newman.
+O arquivo `teste_api/api-automation/restful-booker.postman_environment.json` já está preenchido com todas as variáveis. **Nenhuma configuração adicional** é necessária para a suíte Newman.
 
 Para usar no Postman GUI:
 1. Abra o Postman
 2. Clique em **Import**
-3. Importe `api-automation/restful-booker.postman_collection.json`
-4. Importe `api-automation/restful-booker.postman_environment.json`
+3. Importe `teste_api/api-automation/restful-booker.postman_collection.json`
+4. Importe `teste_api/api-automation/restful-booker.postman_environment.json`
 5. Selecione o ambiente **Restful-Booker-Env** no canto superior direito
 6. Clique em **Run collection**
 
@@ -321,7 +284,7 @@ npx playwright show-report
 ### 6.2 Testes de API — Newman/Postman
 
 ```bash
-cd "teste api"
+cd teste_api
 
 # Executar suíte completa + gerar relatório HTML
 npm test
@@ -337,7 +300,7 @@ O que cada comando executa por baixo:
 | `npm test` | `newman run ... --reporters cli,htmlextra --reporter-htmlextra-export reports/report.html` |
 | `npm run test:cli` | `newman run ... --reporters cli` |
 
-Após `npm test`, abra `teste api/reports/report.html` no browser para ver o relatório visual completo com todas as 53 asserções, tempo de resposta e detalhes de cada request.
+Após `npm test`, abra `teste_api/reports/report.html` no browser para ver o relatório visual completo com todas as 53 asserções, tempo de resposta e detalhes de cada request.
 
 ---
 
@@ -383,7 +346,7 @@ betalent_chalenge/
 │           ├── CheckoutPage.ts
 │           └── CartPage.ts
 │
-├── teste api/                              # Suíte independente Newman/Postman
+├── teste_api/                              # Suíte independente Newman/Postman
 │   ├── README.md                           # Instruções específicas da suíte API
 │   ├── api-automation/
 │   │   ├── restful-booker.postman_collection.json
@@ -486,9 +449,10 @@ betalent_chalenge/
 
 | Documento | Conteúdo |
 |---|---|
-| [`docs/UI_TEST_PLAN.md`](./docs/UI_TEST_PLAN.md) | Plano completo de UI: casos de teste, bugs encontrados, acessibilidade, riscos |
-| [`docs/API_TEST_PLAN.md`](./docs/API_TEST_PLAN.md) | Plano completo de API: cenários, bugs, variáveis de ambiente |
+| [`docs/UI_TEST_PLAN.md`](./docs/UI_TEST_PLAN.md) | Plano completo de UI: estratégia, casos de teste, bugs por usuário |
+| [`docs/API_TEST_PLAN.md`](./docs/API_TEST_PLAN.md) | Plano completo de API: estratégia, cenários, bugs confirmados |
+| [`docs/traceability.md`](./docs/traceability.md) | Matriz de rastreabilidade: test case → bug ID → feature area |
 | [`docs/restful-booker.postman_collection.json`](./docs/restful-booker.postman_collection.json) | Collection Postman para importação |
-| [`teste api/README.md`](./teste%20api/README.md) | Instruções detalhadas da suíte Newman/Postman |
-| [`teste api/docs/vader-analysis.md`](./teste%20api/docs/vader-analysis.md) | Análise heurística VADER sobre os 27 requests |
-| [`teste api/docs/bugs-and-risks.md`](./teste%20api/docs/bugs-and-risks.md) | Bugs e riscos da API documentados |
+| [`teste_api/README.md`](./teste_api/README.md) | Instruções detalhadas da suíte Newman/Postman |
+| [`teste_api/docs/vader-analysis.md`](./teste_api/docs/vader-analysis.md) | Análise heurística VADER sobre os 27 requests |
+| [`teste_api/docs/bugs-and-risks.md`](./teste_api/docs/bugs-and-risks.md) | Bugs e riscos da API documentados |

@@ -14,7 +14,7 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('problem_user', 'secret_sauce');
+    await loginPage.login('problem_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(page).toHaveURL(/inventory.html/);
   });
 
@@ -188,7 +188,7 @@ test.describe('Sauce Demo - performance_glitch_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('performance_glitch_user', 'secret_sauce');
+    await loginPage.login('performance_glitch_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(page).toHaveURL(/inventory.html/, { timeout: SLOW });
   });
 
@@ -271,7 +271,7 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('error_user', 'secret_sauce');
+    await loginPage.login('error_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(page).toHaveURL(/inventory.html/);
   });
 
@@ -389,7 +389,7 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('visual_user', 'secret_sauce');
+    await loginPage.login('visual_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(page).toHaveURL(/inventory.html/);
   });
 
