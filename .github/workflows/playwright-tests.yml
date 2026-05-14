@@ -80,5 +80,9 @@ jobs:
                     Run #${{ github.run_number }}</a></td></tr>
               <tr><td><b>Autor</b></td><td>${{ github.actor }}</td></tr>
             </table>
-            <p>Relatório HTML (zip) em anexo.</p>
-          attachments: playwright-report.zip
+            <p>
+              Baixe o relatório completo em:<br>
+              <a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">
+                GitHub Actions → Artifacts → playwright-report-${{ github.run_number }}
+              </a>
+            </p>
