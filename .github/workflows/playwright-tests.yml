@@ -52,6 +52,18 @@ jobs:
           path: playwright-report.zip
           retention-days: 30
 
+      - name: Generate PDF summary
+        if: always()
+        run: node scripts/generate-playwright-pdf.js
+
+      - name: Convert summary to PDF
+        if: always()
+        run: |
+          google-chrome-stable --headless=new --no-sandbox --disable-gpu \
+            --print-to-pdf="${GITHUB_WORKSPACE}/reports/summary.pdf" \
+            "file://${GITHUB_WORKSPACE}/reports/summary.html" 2>/dev/null
+          echo "PDF size: $(du -sh ${GITHUB_WORKSPACE}/reports/summary.pdf)"
+
       - name: Send email with results
         if: always()
         uses: dawidd6/action-send-mail@v3
@@ -80,9 +92,5 @@ jobs:
                     Run #${{ github.run_number }}</a></td></tr>
               <tr><td><b>Autor</b></td><td>${{ github.actor }}</td></tr>
             </table>
-            <p>
-              Baixe o relatório completo em:<br>
-              <a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">
-                GitHub Actions → Artifacts → playwright-report-${{ github.run_number }}
-              </a>
-            </p>
+            <p>Resumo em PDF anexado. Relatório HTML completo disponível nos artifacts do GitHub Actions.</p>
+          attachments: reports/summary.pdf

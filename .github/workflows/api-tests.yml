@@ -42,6 +42,20 @@ jobs:
           path: teste_api/reports/report.html
           retention-days: 30
 
+      - name: Generate PDF summary
+        if: always()
+        working-directory: ${{ github.workspace }}
+        run: node scripts/generate-newman-pdf.js
+
+      - name: Convert summary to PDF
+        if: always()
+        working-directory: ${{ github.workspace }}
+        run: |
+          google-chrome-stable --headless=new --no-sandbox --disable-gpu \
+            --print-to-pdf="${GITHUB_WORKSPACE}/teste_api/reports/summary.pdf" \
+            "file://${GITHUB_WORKSPACE}/teste_api/reports/summary.html" 2>/dev/null
+          echo "PDF size: $(du -sh ${GITHUB_WORKSPACE}/teste_api/reports/summary.pdf)"
+
       - name: Send email with report
         if: always()
         uses: dawidd6/action-send-mail@v3
@@ -69,5 +83,5 @@ jobs:
                     Run #${{ github.run_number }}</a></td></tr>
               <tr><td><b>Autor</b></td><td>${{ github.actor }}</td></tr>
             </table>
-            <p>Relatório HTML completo em anexo.</p>
-          attachments: teste_api/reports/report.html
+            <p>Resumo em PDF anexado. Relatório HTML completo disponível nos artifacts do GitHub Actions.</p>
+          attachments: teste_api/reports/summary.pdf
