@@ -14,7 +14,7 @@ O projeto possui dois pipelines independentes, ambos configurados em `.github/wo
 - `pull_request` para a branch `master`
 - `schedule` — cron diário às **08:00 UTC (05:00 BRT)**
 
-Após cada execução, independente do resultado, um email é enviado para `edcleryton.gabriel@gmail.com` com o relatório em anexo.
+Após cada execução, independente do resultado, um email é enviado para o email configurar exemplo:`email@exemplo.com` com o relatório em anexo.
 
 ---
 
@@ -26,7 +26,7 @@ URL direta: `https://github.com/Edcleryton/betalent_chalenge/settings/secrets/ac
 
 | Secret | Valor | Usado em |
 |---|---|---|
-| `MAIL_USERNAME` | `edcleryton.gabriel@gmail.com` | Ambos workflows |
+| `MAIL_USERNAME` | `email@exemplo.com` | Ambos workflows |
 | `MAIL_PASSWORD` | App Password do Gmail (16 chars) | Ambos workflows |
 | `API_URL` | `https://restful-booker.herokuapp.com` | playwright-tests |
 | `UI_URL` | `https://www.saucedemo.com` | playwright-tests |
