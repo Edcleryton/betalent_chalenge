@@ -452,7 +452,7 @@ betalent_chalenge/
 | [`docs/UI_TEST_PLAN.md`](./docs/UI_TEST_PLAN.md) | Plano completo de UI: estratégia, casos de teste, bugs por usuário |
 | [`docs/API_TEST_PLAN.md`](./docs/API_TEST_PLAN.md) | Plano completo de API: estratégia, cenários, bugs confirmados |
 | [`docs/traceability.md`](./docs/traceability.md) | Matriz de rastreabilidade: test case → bug ID → feature area |
-| [`docs/restful-booker.postman_collection.json`](./docs/restful-booker.postman_collection.json) | Collection Postman para importação |
+| [`teste_api/api-automation/restful-booker.postman_collection.json`](./teste_api/api-automation/restful-booker.postman_collection.json) | Collection Postman para importação |
 | [`teste_api/README.md`](./teste_api/README.md) | Instruções detalhadas da suíte Newman/Postman |
 | [`teste_api/docs/vader-analysis.md`](./teste_api/docs/vader-analysis.md) | Análise heurística VADER sobre os 27 requests |
 | [`teste_api/docs/bugs-and-risks.md`](./teste_api/docs/bugs-and-risks.md) | Bugs e riscos da API documentados |
