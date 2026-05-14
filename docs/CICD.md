@@ -22,7 +22,7 @@ Após cada execução, independente do resultado, um email é enviado para o ema
 
 Acesse: **Settings → Secrets and variables → Actions → New repository secret**
 
-URL direta: `https://github.com/Edcleryton/betalent_chalenge/settings/secrets/actions`
+URL direta: `https://github.com/seu-usuário/betalent_chalenge/settings/secrets/actions`
 
 | Secret | Valor | Usado em |
 |---|---|---|
