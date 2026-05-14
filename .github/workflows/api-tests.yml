@@ -51,10 +51,15 @@ jobs:
         if: always()
         working-directory: ${{ github.workspace }}
         run: |
-          google-chrome-stable --headless=new --no-sandbox --disable-gpu \
-            --print-to-pdf="${GITHUB_WORKSPACE}/teste_api/reports/summary.pdf" \
-            "file://${GITHUB_WORKSPACE}/teste_api/reports/summary.html" 2>/dev/null
-          echo "PDF size: $(du -sh ${GITHUB_WORKSPACE}/teste_api/reports/summary.pdf)"
+          CHROME=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium-browser || echo "")
+          if [ -z "$CHROME" ]; then
+            echo "WARNING: Chrome not found, skipping PDF conversion"
+          else
+            $CHROME --headless --no-sandbox --disable-gpu \
+              --print-to-pdf="${GITHUB_WORKSPACE}/teste_api/reports/summary.pdf" \
+              "file://${GITHUB_WORKSPACE}/teste_api/reports/summary.html"
+            echo "PDF gerado: $(du -sh ${GITHUB_WORKSPACE}/teste_api/reports/summary.pdf 2>/dev/null || echo 'arquivo nao encontrado')"
+          fi
 
       - name: Send email with report
         if: always()
