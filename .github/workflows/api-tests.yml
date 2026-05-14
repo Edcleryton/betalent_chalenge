@@ -55,7 +55,7 @@ jobs:
             ${{ job.status == 'success' && '✅' || '❌' }}
             Newman API Tests — Run #${{ github.run_number }} (${{ job.status }})
           to: edcleryton.gabriel@gmail.com
-          from: ${{ secrets.MAIL_USERNAME }}
+          from: edcleryton.gabriel@gmail.com
           html_body: |
             <h2>Newman API Tests — Restful-Booker</h2>
             <table>

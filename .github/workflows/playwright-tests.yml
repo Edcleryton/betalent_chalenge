@@ -65,7 +65,7 @@ jobs:
             ${{ steps.run_tests.outcome == 'success' && '✅' || '❌' }}
             Playwright Tests — Run #${{ github.run_number }} (${{ steps.run_tests.outcome }})
           to: edcleryton.gabriel@gmail.com
-          from: ${{ secrets.MAIL_USERNAME }}
+          from: edcleryton.gabriel@gmail.com
           html_body: |
             <h2>Playwright Tests — BeTalent QA Suite</h2>
             <table>
