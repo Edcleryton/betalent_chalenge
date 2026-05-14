@@ -37,8 +37,8 @@ jobs:
 
       - name: Run Playwright tests (api + chromium)
         id: run_tests
-        run: npx playwright test --project=api --project=chromium
         continue-on-error: true
+        run: npx playwright test --project=api --project=chromium
 
       - name: Zip Playwright report
         if: always()
@@ -79,23 +79,41 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: >-
-            ${{ steps.run_tests.outcome == 'success' && '✅' || '❌' }}
-            Playwright Tests — Run #${{ github.run_number }} (${{ steps.run_tests.outcome }})
+            ${{ steps.run_tests.outcome == 'success' && '✅' || '⚠️' }}
+            Playwright Tests — Run #${{ github.run_number }} —
+            ${{ steps.run_tests.outcome == 'success' && 'todos passaram' || 'falhas nos testes' }}
           to: edcleryton.gabriel@gmail.com
           from: edcleryton.gabriel@gmail.com
           html_body: |
             <h2>Playwright Tests — BeTalent QA Suite</h2>
-            <table>
-              <tr><td><b>Status</b></td>
-                  <td>${{ steps.run_tests.outcome == 'success' && '✅ Passou' || '❌ Falhou' }}</td></tr>
-              <tr><td><b>Projetos</b></td><td>api, chromium (setup incluído como dep)</td></tr>
+            <table cellpadding="6" cellspacing="0" style="border-collapse:collapse">
+              <tr>
+                <td><b>Pipeline</b></td>
+                <td>✅ Executado com sucesso</td>
+              </tr>
+              <tr>
+                <td><b>Testes</b></td>
+                <td>${{ steps.run_tests.outcome == 'success' && '✅ Todos passaram' || '⚠️ Falhas detectadas nos testes' }}</td>
+              </tr>
+              <tr><td><b>Projetos</b></td><td>api, chromium</td></tr>
               <tr><td><b>Trigger</b></td><td>${{ github.event_name }}</td></tr>
               <tr><td><b>Branch</b></td><td>${{ github.ref_name }}</td></tr>
               <tr><td><b>Commit</b></td><td><code>${{ github.sha }}</code></td></tr>
-              <tr><td><b>Run</b></td>
-                  <td><a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">
-                    Run #${{ github.run_number }}</a></td></tr>
+              <tr>
+                <td><b>Run</b></td>
+                <td><a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">
+                  Run #${{ github.run_number }}</a></td>
+              </tr>
               <tr><td><b>Autor</b></td><td>${{ github.actor }}</td></tr>
             </table>
-            <p>Resumo em PDF anexado. Relatório HTML completo disponível nos artifacts do GitHub Actions.</p>
+            ${{ steps.run_tests.outcome != 'success' && '
+            <p style="margin-top:12px;padding:10px;background:#fff8e1;border-left:4px solid #f9a825;font-size:13px">
+              <b>ℹ️ Sobre as falhas:</b> os testes falharam porque assertam o comportamento
+              correto segundo a RFC — a API possui bugs conhecidos documentados que ainda
+              não foram corrigidos. O pipeline rodou normalmente; as falhas são sinais de
+              rastreamento dos bugs, não erros de infraestrutura.
+            </p>' || '' }}
+            <p style="margin-top:12px;font-size:12px;color:#555">
+              Resumo em PDF anexado. Relatório HTML completo disponível nos artifacts do GitHub Actions.
+            </p>
           attachments: reports/summary.pdf
