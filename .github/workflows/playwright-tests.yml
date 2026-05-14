@@ -1,0 +1,84 @@
+name: Playwright Tests — UI + API
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  schedule:
+    - cron: '0 8 * * *'   # diariamente às 08:00 UTC (05:00 BRT)
+
+jobs:
+  playwright-tests:
+    name: Run Playwright Tests (api + chromium)
+    runs-on: ubuntu-latest
+
+    env:
+      API_URL: ${{ secrets.API_URL }}
+      UI_URL: ${{ secrets.UI_URL }}
+      API_USER: ${{ secrets.API_USER }}
+      API_PASSWORD: ${{ secrets.API_PASSWORD }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium browser + OS deps
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests (api + chromium)
+        id: run_tests
+        run: npx playwright test --project=api --project=chromium
+        continue-on-error: true
+
+      - name: Zip Playwright report
+        if: always()
+        run: zip -r playwright-report.zip playwright-report/
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_number }}
+          path: playwright-report.zip
+          retention-days: 30
+
+      - name: Send email with results
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: >-
+            ${{ steps.run_tests.outcome == 'success' && '✅' || '❌' }}
+            Playwright Tests — Run #${{ github.run_number }} (${{ steps.run_tests.outcome }})
+          to: edcleryton.gabriel@gmail.com
+          from: ${{ secrets.MAIL_USERNAME }}
+          html_body: |
+            <h2>Playwright Tests — BeTalent QA Suite</h2>
+            <table>
+              <tr><td><b>Status</b></td>
+                  <td>${{ steps.run_tests.outcome == 'success' && '✅ Passou' || '❌ Falhou' }}</td></tr>
+              <tr><td><b>Projetos</b></td><td>api, chromium (setup incluído como dep)</td></tr>
+              <tr><td><b>Trigger</b></td><td>${{ github.event_name }}</td></tr>
+              <tr><td><b>Branch</b></td><td>${{ github.ref_name }}</td></tr>
+              <tr><td><b>Commit</b></td><td><code>${{ github.sha }}</code></td></tr>
+              <tr><td><b>Run</b></td>
+                  <td><a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">
+                    Run #${{ github.run_number }}</a></td></tr>
+              <tr><td><b>Autor</b></td><td>${{ github.actor }}</td></tr>
+            </table>
+            <p>Relatório HTML (zip) em anexo.</p>
+          attachments: playwright-report.zip

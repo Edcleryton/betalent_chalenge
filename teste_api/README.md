@@ -108,13 +108,16 @@ A coleção possui **5 grupos** com **27 requests** e **53 asserções**:
 
 ## CI/CD
 
-O pipeline GitHub Actions (`.github/workflows/api-tests.yml`) executa automaticamente a cada `push` ou `pull_request` na branch `main`:
+O pipeline GitHub Actions (`.github/workflows/api-tests.yml` na raiz do repositório) executa automaticamente a cada `push`, `pull_request` na branch `master` e **diariamente às 08:00 UTC (05:00 BRT)**:
 
 1. Faz checkout do repositório
-2. Configura Node.js 20
+2. Configura Node.js 20 com cache de dependências
 3. Instala dependências (`npm ci`)
 4. Executa a suíte (`npm test`)
-5. Faz upload da pasta `reports/` como artifact `test-artifacts` (retido por 30 dias), mesmo em caso de falha
+5. Faz upload do `report.html` como artifact (retido por 30 dias), mesmo em caso de falha
+6. Envia o relatório por email para `edcleryton.gabriel@gmail.com`
+
+> Guia completo de configuração de secrets e Gmail App Password: [docs/CICD.md](../../docs/CICD.md)
 
 ---
 
@@ -123,7 +126,7 @@ O pipeline GitHub Actions (`.github/workflows/api-tests.yml`) executa automatica
 - A API Restful-Booker está online em `https://restful-booker.herokuapp.com`.
 - O token é gerado dinamicamente a cada execução e armazenado em variável de ambiente.
 - Os dados criados nos testes CRUD e Contract são deletados ao final de cada grupo.
-- Bugs conhecidos da API estão documentados em `docs/bugs-and-risks.md` e os testes os tratam com `oneOf` para não gerar falsos negativos.
+- Bugs conhecidos da API estão documentados em `docs/bugs-and-risks.md`. Os testes afirmam o comportamento correto por RFC — enquanto o bug existir, o teste falha ativamente como sinal de rastreabilidade.
 
 ---
 

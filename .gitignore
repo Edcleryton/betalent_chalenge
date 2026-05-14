@@ -15,13 +15,9 @@ playwright-report/
 # ── PDFs (enunciado do desafio e docs de referência) ─────────────────────────
 *.pdf
 
-# ── Relatórios gerados (cobertos pelo .gitignore interno de teste api/) ───────
-teste api/reports/
-teste api/scripts/
-
-# ── Lock files ────────────────────────────────────────────────────────────────
-package-lock.json
-**/package-lock.json
+# ── Relatórios gerados ────────────────────────────────────────────────────────
+teste_api/reports/
+teste_api/scripts/
 
 # ── Sistema operacional ───────────────────────────────────────────────────────
 .DS_Store

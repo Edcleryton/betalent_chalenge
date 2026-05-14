@@ -1,0 +1,73 @@
+name: API Tests — Newman (Restful-Booker)
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  schedule:
+    - cron: '0 8 * * *'   # diariamente às 08:00 UTC (05:00 BRT)
+
+jobs:
+  newman-tests:
+    name: Run Newman API Tests
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: teste_api
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: teste_api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Newman API tests
+        run: npm test
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-report-${{ github.run_number }}
+          path: teste_api/reports/report.html
+          retention-days: 30
+
+      - name: Send email with report
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: >-
+            ${{ job.status == 'success' && '✅' || '❌' }}
+            Newman API Tests — Run #${{ github.run_number }} (${{ job.status }})
+          to: edcleryton.gabriel@gmail.com
+          from: ${{ secrets.MAIL_USERNAME }}
+          html_body: |
+            <h2>Newman API Tests — Restful-Booker</h2>
+            <table>
+              <tr><td><b>Status</b></td>
+                  <td>${{ job.status == 'success' && '✅ Passou' || '❌ Falhou' }}</td></tr>
+              <tr><td><b>Trigger</b></td><td>${{ github.event_name }}</td></tr>
+              <tr><td><b>Branch</b></td><td>${{ github.ref_name }}</td></tr>
+              <tr><td><b>Commit</b></td><td><code>${{ github.sha }}</code></td></tr>
+              <tr><td><b>Run</b></td>
+                  <td><a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">
+                    Run #${{ github.run_number }}</a></td></tr>
+              <tr><td><b>Autor</b></td><td>${{ github.actor }}</td></tr>
+            </table>
+            <p>Relatório HTML completo em anexo.</p>
+          attachments: teste_api/reports/report.html
