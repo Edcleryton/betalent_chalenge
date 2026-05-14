@@ -16,11 +16,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 201\", function () {",
-									"    pm.response.to.have.status(201);",
-									"});",
-									"pm.test(\"Body contains Created\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"Created\");",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -32,8 +29,12 @@
 						"header": [],
 						"url": {
 							"raw": "{{base_url}}/ping",
-							"host": ["{{base_url}}"],
-							"path": ["ping"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ping"
+							]
 						}
 					},
 					"response": []
@@ -67,7 +68,10 @@
 					"request": {
 						"method": "POST",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -75,8 +79,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/auth",
-							"host": ["{{base_url}}"],
-							"path": ["auth"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth"
+							]
 						}
 					},
 					"response": []
@@ -88,9 +96,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status 200 com body de erro (BUG-003 documentado)\", function () {",
-									"    pm.response.to.have.status(200);",
-									"    pm.expect(pm.response.json().reason).to.eql(\"Bad credentials\");",
+									"pm.test(\"Credenciais inválidas devem retornar 401 Unauthorized\", function () {",
+									"    pm.response.to.have.status(401);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -100,7 +107,10 @@
 					"request": {
 						"method": "POST",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -108,8 +118,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/auth",
-							"host": ["{{base_url}}"],
-							"path": ["auth"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth"
+							]
 						}
 					},
 					"response": []
@@ -149,7 +163,10 @@
 					"request": {
 						"method": "POST",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -157,8 +174,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking",
-							"host": ["{{base_url}}"],
-							"path": ["booking"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking"
+							]
 						}
 					},
 					"response": []
@@ -170,8 +191,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Expect 200 but API Bug returns 418 (BUG-002)\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200, 418]);",
+									"pm.test(\"POST /booking com XML deve retornar 200\", function () {",
+									"    pm.response.to.have.status(200);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -181,8 +202,14 @@
 					"request": {
 						"method": "POST",
 						"header": [
-							{"key": "Content-Type", "value": "text/xml"},
-							{"key": "Accept", "value": "text/xml"}
+							{
+								"key": "Content-Type",
+								"value": "text/xml"
+							},
+							{
+								"key": "Accept",
+								"value": "text/xml"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -190,8 +217,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking",
-							"host": ["{{base_url}}"],
-							"path": ["booking"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking"
+							]
 						}
 					},
 					"response": []
@@ -219,8 +250,12 @@
 						"header": [],
 						"url": {
 							"raw": "{{base_url}}/booking",
-							"host": ["{{base_url}}"],
-							"path": ["booking"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking"
+							]
 						}
 					},
 					"response": []
@@ -256,11 +291,21 @@
 						"header": [],
 						"url": {
 							"raw": "{{base_url}}/booking?firstname=Jim&lastname=Brown",
-							"host": ["{{base_url}}"],
-							"path": ["booking"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking"
+							],
 							"query": [
-								{"key": "firstname", "value": "Jim"},
-								{"key": "lastname", "value": "Brown"}
+								{
+									"key": "firstname",
+									"value": "Jim"
+								},
+								{
+									"key": "lastname",
+									"value": "Brown"
+								}
 							]
 						}
 					},
@@ -289,11 +334,21 @@
 						"header": [],
 						"url": {
 							"raw": "{{base_url}}/booking?checkin=2024-01-01&checkout=2024-01-02",
-							"host": ["{{base_url}}"],
-							"path": ["booking"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking"
+							],
 							"query": [
-								{"key": "checkin", "value": "2024-01-01"},
-								{"key": "checkout", "value": "2024-01-02"}
+								{
+									"key": "checkin",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "checkout",
+									"value": "2024-01-02"
+								}
 							]
 						}
 					},
@@ -336,12 +391,20 @@
 					"request": {
 						"method": "GET",
 						"header": [
-							{"key": "Accept", "value": "application/json"}
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
 						],
 						"url": {
 							"raw": "{{base_url}}/booking/{{booking_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "{{booking_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"{{booking_id}}"
+							]
 						}
 					},
 					"response": []
@@ -364,12 +427,20 @@
 					"request": {
 						"method": "GET",
 						"header": [
-							{"key": "Accept", "value": "application/json"}
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
 						],
 						"url": {
 							"raw": "{{base_url}}/booking/999999",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "999999"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"999999"
+							]
 						}
 					},
 					"response": []
@@ -396,14 +467,28 @@
 						"auth": {
 							"type": "basic",
 							"basic": [
-								{"key": "password", "value": "password123", "type": "string"},
-								{"key": "username", "value": "admin", "type": "string"}
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
 							]
 						},
 						"method": "PUT",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Accept", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -411,8 +496,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking/{{booking_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "{{booking_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"{{booking_id}}"
+							]
 						}
 					},
 					"response": []
@@ -440,9 +530,18 @@
 					"request": {
 						"method": "PATCH",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Accept", "value": "application/json"},
-							{"key": "Cookie", "value": "token={{token}}"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{token}}"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -450,8 +549,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking/{{booking_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "{{booking_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"{{booking_id}}"
+							]
 						}
 					},
 					"response": []
@@ -463,8 +567,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 201 (BUG-001: deveria ser 204)\", function () {",
-									"    pm.response.to.have.status(201);",
+									"pm.test(\"DELETE deve retornar 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -474,12 +578,20 @@
 					"request": {
 						"method": "DELETE",
 						"header": [
-							{"key": "Cookie", "value": "token={{token}}"}
+							{
+								"key": "Cookie",
+								"value": "token={{token}}"
+							}
 						],
 						"url": {
 							"raw": "{{base_url}}/booking/{{booking_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "{{booking_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"{{booking_id}}"
+							]
 						}
 					},
 					"response": []
@@ -491,8 +603,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Payload sem campo obrigatório retorna erro\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([400, 500]);",
+									"pm.test(\"Payload sem campo obrigatório deve retornar 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -502,7 +614,10 @@
 					"request": {
 						"method": "POST",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -510,8 +625,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking",
-							"host": ["{{base_url}}"],
-							"path": ["booking"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking"
+							]
 						}
 					},
 					"response": []
@@ -539,7 +658,10 @@
 					"request": {
 						"method": "PUT",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -547,8 +669,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking/1",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"1"
+							]
 						}
 					},
 					"response": []
@@ -573,8 +700,13 @@
 						"header": [],
 						"url": {
 							"raw": "{{base_url}}/booking/1",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"1"
+							]
 						}
 					},
 					"response": []
@@ -597,12 +729,20 @@
 					"request": {
 						"method": "DELETE",
 						"header": [
-							{"key": "Cookie", "value": "token=invalid_token_xyz_betalent_test"}
+							{
+								"key": "Cookie",
+								"value": "token=invalid_token_xyz_betalent_test"
+							}
 						],
 						"url": {
 							"raw": "{{base_url}}/booking/1",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"1"
+							]
 						}
 					},
 					"response": []
@@ -625,7 +765,10 @@
 					"request": {
 						"method": "PATCH",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -633,8 +776,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking/1",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"1"
+							]
 						}
 					},
 					"response": []
@@ -660,14 +808,27 @@
 					"request": {
 						"method": "GET",
 						"header": [
-							{"key": "X-Custom-Header", "value": "<script>alert(1)</script>"},
-							{"key": "X-SQL-Injection", "value": "'; DROP TABLE bookings; --"},
-							{"key": "X-Forwarded-For", "value": "127.0.0.1, 127.0.0.2, 127.0.0.1"}
+							{
+								"key": "X-Custom-Header",
+								"value": "<script>alert(1)</script>"
+							},
+							{
+								"key": "X-SQL-Injection",
+								"value": "'; DROP TABLE bookings; --"
+							},
+							{
+								"key": "X-Forwarded-For",
+								"value": "127.0.0.1, 127.0.0.2, 127.0.0.1"
+							}
 						],
 						"url": {
 							"raw": "{{base_url}}/booking",
-							"host": ["{{base_url}}"],
-							"path": ["booking"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking"
+							]
 						}
 					},
 					"response": []
@@ -690,9 +851,18 @@
 					"request": {
 						"method": "PUT",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Accept", "value": "application/json"},
-							{"key": "Cookie", "value": "token=000000000000000000000000"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token=000000000000000000000000"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -700,8 +870,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking/1",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"1"
+							]
 						}
 					},
 					"response": []
@@ -739,7 +914,10 @@
 					"request": {
 						"method": "POST",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -747,8 +925,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/auth",
-							"host": ["{{base_url}}"],
-							"path": ["auth"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth"
+							]
 						}
 					},
 					"response": []
@@ -783,8 +965,12 @@
 						"header": [],
 						"url": {
 							"raw": "{{base_url}}/booking",
-							"host": ["{{base_url}}"],
-							"path": ["booking"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking"
+							]
 						}
 					},
 					"response": []
@@ -832,7 +1018,10 @@
 					"request": {
 						"method": "POST",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -840,8 +1029,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking",
-							"host": ["{{base_url}}"],
-							"path": ["booking"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking"
+							]
 						}
 					},
 					"response": []
@@ -883,12 +1076,20 @@
 					"request": {
 						"method": "GET",
 						"header": [
-							{"key": "Accept", "value": "application/json"}
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
 						],
 						"url": {
 							"raw": "{{base_url}}/booking/{{contract_booking_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "{{contract_booking_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"{{contract_booking_id}}"
+							]
 						}
 					},
 					"response": []
@@ -929,14 +1130,28 @@
 						"auth": {
 							"type": "basic",
 							"basic": [
-								{"key": "password", "value": "password123", "type": "string"},
-								{"key": "username", "value": "admin", "type": "string"}
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
 							]
 						},
 						"method": "PUT",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Accept", "value": "application/json"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -944,8 +1159,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking/{{contract_booking_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "{{contract_booking_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"{{contract_booking_id}}"
+							]
 						}
 					},
 					"response": []
@@ -979,9 +1199,18 @@
 					"request": {
 						"method": "PATCH",
 						"header": [
-							{"key": "Content-Type", "value": "application/json"},
-							{"key": "Accept", "value": "application/json"},
-							{"key": "Cookie", "value": "token={{token}}"}
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{token}}"
+							}
 						],
 						"body": {
 							"mode": "raw",
@@ -989,8 +1218,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/booking/{{contract_booking_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "{{contract_booking_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"{{contract_booking_id}}"
+							]
 						}
 					},
 					"response": []
@@ -1002,8 +1236,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Cleanup: booking removido (BUG-001: retorna 201 ao invés de 204)\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([201, 204]);",
+									"pm.test(\"Cleanup: DELETE deve retornar 204 No Content\", function () {",
+									"    pm.response.to.have.status(204);",
 									"    pm.environment.unset(\"contract_booking_id\");",
 									"});"
 								],
@@ -1014,12 +1248,20 @@
 					"request": {
 						"method": "DELETE",
 						"header": [
-							{"key": "Cookie", "value": "token={{token}}"}
+							{
+								"key": "Cookie",
+								"value": "token={{token}}"
+							}
 						],
 						"url": {
 							"raw": "{{base_url}}/booking/{{contract_booking_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["booking", "{{contract_booking_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"booking",
+								"{{contract_booking_id}}"
+							]
 						}
 					},
 					"response": []

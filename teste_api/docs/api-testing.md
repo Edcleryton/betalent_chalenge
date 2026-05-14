@@ -43,18 +43,18 @@ Validar a integridade funcional, de contrato e de segurança da API **Restful-Bo
 |---|---|---|---|
 | API-001 | Gerar token com credenciais válidas | Status 200 + token string | Automatizado |
 | API-002 | Criar reserva com dados válidos (JSON) | Status 200 + bookingid + dados confirmados | Automatizado |
-| API-003 | Criar reserva com dados válidos (XML) | Status 200 (API retorna 418 — BUG-002) | Automatizado |
-| API-004 | Listar todos os IDs de reservas | Status 200 + array com bookingid numérico | Automatizado |
-| API-005 | Filtrar reservas por nome (firstname + lastname) | Status 200 + array com bookingid | Automatizado |
-| API-006 | Filtrar reservas por data (checkin + checkout) | Status 200 + array | Automatizado |
-| API-007 | Consultar reserva específica por ID | Status 200 + schema completo | Automatizado |
-| API-008 | Atualizar reserva completa (PUT) com Basic Auth | Status 200 + dados atualizados | Automatizado |
-| API-009 | Atualizar reserva parcialmente (PATCH) com Token | Status 200 + campos alterados refletidos | Automatizado |
-| API-010 | Excluir reserva (DELETE) | Status 201 (BUG-001: deveria ser 204) | Automatizado |
-| API-011 | Consultar ID inexistente | Status 404 | Automatizado |
-| API-012 | Criar reserva sem campo obrigatório (`firstname`) | Status 400 ou 500 | Automatizado |
-| API-013 | Autenticar com credenciais inválidas | Status 200 + `reason: "Bad credentials"` (BUG-003) | Automatizado |
-| API-014 | Health check do serviço | Status 201 + body "Created" | Automatizado |
+| API-003 | Criar reserva com dados válidos (XML) | Status 200 | ❌ Falha — BUG-002 (API retorna 418) |
+| API-004 | Listar todos os IDs de reservas | Status 200 + array com bookingid numérico | ✅ Automatizado |
+| API-005 | Filtrar reservas por nome (firstname + lastname) | Status 200 + array com bookingid | ✅ Automatizado |
+| API-006 | Filtrar reservas por data (checkin + checkout) | Status 200 + array | ✅ Automatizado |
+| API-007 | Consultar reserva específica por ID | Status 200 + schema completo | ✅ Automatizado |
+| API-008 | Atualizar reserva completa (PUT) com Basic Auth | Status 200 + dados atualizados | ✅ Automatizado |
+| API-009 | Atualizar reserva parcialmente (PATCH) com Token | Status 200 + campos alterados refletidos | ✅ Automatizado |
+| API-010 | Excluir reserva (DELETE) | Status 204 No Content | ❌ Falha — BUG-001 (API retorna 201) |
+| API-011 | Consultar ID inexistente | Status 404 | ✅ Automatizado |
+| API-012 | Criar reserva sem campo obrigatório (`firstname`) | Status 400 Bad Request | ❌ Falha — BUG-004 (API retorna 500) |
+| API-013 | Autenticar com credenciais inválidas | Status 401 Unauthorized | ❌ Falha — BUG-003 (API retorna 200) |
+| API-014 | Health check do serviço | Status 200 OK | ❌ Falha — BUG-005 (API retorna 201) |
 
 ---
 

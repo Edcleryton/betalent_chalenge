@@ -99,7 +99,7 @@ test.describe('Restful-Booker API Testing', () => {
       }
     });
 
-    expect(response.status()).toBe(201); // Restful-Booker returns 201 Created for DELETE
+    expect(response.status()).toBe(204);
     
     // Verify deletion
     const getResponse = await request.get(`${API_URL}/booking/${bookingId}`);
@@ -184,7 +184,6 @@ test.describe('Restful-Booker API Testing', () => {
 
   test('should return health check response (GET /ping)', async ({ request }) => {
     const response = await request.get(`${API_URL}/ping`);
-    // BUG-005: API retorna 201 em vez de 200 — comportamento real documentado
-    expect(response.status()).toBe(201);
+    expect(response.status()).toBe(200);
   });
 });

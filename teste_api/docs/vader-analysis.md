@@ -4,13 +4,17 @@
 > VADER = **V**erbs · **A**uthorization · **D**ata · **E**rrors · **R**esponsiveness
 >
 > **Cobertura:** todas as 27 requests numeradas e rastreadas individualmente.
-> **Execuções realizadas:** 3 runs independentes. Todos os bugs confirmados em todas as execuções — comportamentos estáveis e reproduzíveis.
+> **Execuções realizadas:** 3 runs independentes. Todos os bugs identificados e confirmados em todas as execuções — comportamentos estáveis e reproduzíveis.
+
+> **⚠️ Nota sobre as métricas de falha:**
+> As 3 execuções abaixo foram realizadas com asserções que aceitavam o comportamento atual da API (incluindo os status codes incorretos). Após a análise, as asserções foram corrigidas para afirmar o comportamento correto segundo a especificação REST (RFC 7231). Com as asserções atuais, **6 testes falham** — cada falha corresponde a um bug ativo registrado em [bugs-and-risks.md](bugs-and-risks.md): BUG-001, BUG-002, BUG-003, BUG-004 e BUG-005 (BUG-001 aparece em 2 requests).
 >
 > | Métrica | Run 1 | Run 2 | Run 3 |
 > |---|---|---|---|
 > | Total de requests | 27 | 27 | 27 |
 > | Asserções | 53 | 53 | 53 |
-> | Falhas | 0 | 0 | 0 |
+> | Falhas (asserções originais) | 0 | 0 | 0 |
+> | Falhas (asserções corrigidas) | 6 | 6 | 6 |
 > | Duração total | 5.7s | 6.1s | 5.9s |
 > | Tempo médio | 129ms | 142ms | 135ms |
 > | Tempo mínimo | 99ms | 110ms | 109ms |

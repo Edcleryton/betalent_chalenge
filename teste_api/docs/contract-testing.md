@@ -111,9 +111,9 @@ Contract - Cleanup                → DELETE /booking/{{contract_booking_id}} (l
 
 No relatório `reports/report.html` (htmlextra), falhas de contrato aparecem como asserções vermelhas dentro do grupo "5. Contract Tests". Cada asserção identifica exatamente qual campo ou tipo falhou.
 
-**Exemplo de falha:** se `totalprice` vier como string `"111"` em vez de number `111`, a asserção `Contract: tipos de dados corretos` falhará com a mensagem:
+**Falha de schema (mudança de comportamento):** se `totalprice` vier como string `"111"` em vez de number `111`, a asserção `Contract: tipos de dados corretos` falhará com:
 ```
 AssertionError: expected '111' to be a number
 ```
 
-Isso indica uma mudança de comportamento da API que quebra o contrato documentado.
+**Falha de bug ativo:** o teste `Contract - Cleanup (DeleteBooking)` falha atualmente porque a API retorna `201` em vez de `204 No Content` para DELETE. Essa falha é esperada e rastreada como **BUG-001**. Quando a API for corrigida, o teste passa automaticamente sem nenhuma alteração de código.

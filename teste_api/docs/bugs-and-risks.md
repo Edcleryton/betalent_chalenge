@@ -2,14 +2,16 @@
 
 ## 1. Bugs Encontrados (Confirmados via Automação)
 
-| ID | Endpoint | Descrição | Severidade | Status |
-|---|---|---|---|---|
-| BUG-001 | `DELETE /booking/:id` | Retorna **status 201 Created** em vez de **204 No Content**. A semântica REST exige 204 para deleção bem-sucedida. Confirmado em 2 requests: `DeleteBooking` e `Contract - Cleanup`. | Baixa | Confirmado |
-| BUG-002 | `POST /booking` (XML) | Requisição com `Content-Type: text/xml` retorna **418 I'm a Teapot** em vez de 200. Suporte a XML está documentado mas não implementado. | Média | Confirmado |
-| BUG-003 | `POST /auth` | Credenciais inválidas retornam **status 200 OK** com `{ "reason": "Bad credentials" }` no body, em vez de **401 Unauthorized**. Dificulta tratamento de erro por status code. | Média | Confirmado |
-| BUG-004 | `POST /booking` | Payload sem campo obrigatório (`firstname`) retorna **500 Internal Server Error** em vez de **400 Bad Request**. Indica ausência de validação de entrada no servidor. | Alta | Confirmado |
-| BUG-005 | `GET /ping` | Health check retorna **status 201 Created** em vez de **200 OK**. O código 201 significa "recurso criado", semanticamente incorreto para um endpoint de disponibilidade. Ferramentas de monitoramento que validam status 200 reportarão falha. | Baixa | Confirmado |
-| BUG-006 | Todos os endpoints de erro | Respostas de erro (403, 404) retornam **body em texto puro** (`"Forbidden"`, `"Not Found"`) em vez de JSON estruturado. Impede tratamento programático de erros sem parsear string. | Baixa | Confirmado |
+Os testes afirmam o comportamento correto segundo a especificação REST (RFC 7231). Enquanto o bug não for corrigido na API, o teste correspondente **falha** — essa falha é o sinal de rastreabilidade do bug.
+
+| ID | Endpoint | Descrição | Severidade | Teste que falha | Status |
+|---|---|---|---|---|---|
+| BUG-001 | `DELETE /booking/:id` | Retorna **201 Created** em vez de **204 No Content**. A semântica REST exige 204 para deleção bem-sucedida. Confirmado em 2 requests: `DeleteBooking` e `Contract - Cleanup`. | Baixa | `DeleteBooking`, `Contract - Cleanup (DeleteBooking)` | ❌ Ativo |
+| BUG-002 | `POST /booking` (XML) | Requisição com `Content-Type: text/xml` retorna **418 I'm a Teapot** em vez de 200. Suporte a XML está documentado mas não implementado. | Média | `CreateBooking - XML (Evidence Bug)` | ❌ Ativo |
+| BUG-003 | `POST /auth` | Credenciais inválidas retornam **200 OK** com `{ "reason": "Bad credentials" }` no body, em vez de **401 Unauthorized**. Qualquer client que verifique apenas o status code trata a falha de login como sucesso. | Média | `Auth - Invalid Credentials` | ❌ Ativo |
+| BUG-004 | `POST /booking` | Payload sem campo obrigatório (`firstname`) retorna **500 Internal Server Error** em vez de **400 Bad Request**. Indica ausência de validação de entrada no servidor; em produção pode expor stack traces. | Alta | `CreateBooking - Missing Required Field` | ❌ Ativo |
+| BUG-005 | `GET /ping` | Health check retorna **201 Created** em vez de **200 OK**. O código 201 significa "recurso criado", semanticamente incorreto para um endpoint de disponibilidade. Ferramentas de monitoramento que validam 200 reportarão falsa indisponibilidade. | Baixa | `Ping - HealthCheck` | ❌ Ativo |
+| BUG-006 | Todos os endpoints de erro | Respostas de erro (403, 404) retornam **body em texto puro** (`"Forbidden"`, `"Not Found"`) em vez de JSON estruturado. Impede tratamento programático de erros sem parsear string. | Baixa | — (sem asserção de body de erro atualmente) | ⚠️ Documentado |
 
 ---
 
@@ -34,7 +36,7 @@
 |---|---|---|---|
 | **Instabilidade de dados:** API pública compartilhada — IDs podem ser alterados/deletados por outros usuários entre requisições | Alta | Médio | Usar IDs gerados dinamicamente pelo próprio teste; nunca hardcodar IDs de dados |
 | **Indisponibilidade de serviço:** Heroku free tier pode ter cold starts ou instabilidade | Média | Alto | Retry na CI/CD; monitorar via Health Check antes de executar a suíte |
-| **Ambiguidade de status 418:** Dificulta automação e diagnóstico de erros reais de integração | Alta | Médio | Usar `oneOf([200, 418])` na asserção; documentar o bug |
+| **Ambiguidade de status 418:** Dificulta automação e diagnóstico de erros reais de integração | Alta | Médio | Teste afirma 200 (correto); falha ativa rastreia o bug (BUG-002) |
 | **Token sem expiração:** Tokens válidos por tempo indeterminado aumentam superfície de ataque | Baixa | Alto | Documentar como risco de segurança; gerar novo token a cada execução |
 | **Validação ausente no servidor:** Payloads malformados causam 500 ao invés de 400 | Alta | Médio | Incluir nos testes negativos; reportar como BUG-004 |
 
