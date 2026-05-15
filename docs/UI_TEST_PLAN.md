@@ -128,10 +128,10 @@ O SauceDemo disponibiliza 6 personas de teste, cada uma simulando uma classe dif
 
 ## 4. Diferenciais (Nível 2)
 -   **Responsividade:** Testes executados em Viewports de Desktop (Chromium), Mobile Android (Pixel 5) e Mobile iOS (iPhone 12).
--   **Acessibilidade:** Varredura axe-core em 3 páginas distintas: Login (UI-18), Inventário (UI-07/08) e Carrinho (UI-19) — soft assertions para não bloquear a suíte.
+-   **Acessibilidade:** Varredura axe-core em 3 páginas distintas: Login (UI-18), Inventário (UI-07/08) e Carrinho (UI-19).
 -   **POM:** Estrutura modularizada com `LoginPage`, `ProductsPage`, `CheckoutPage` e `CartPage`.
--   **Múltiplos usuários:** Todos os 6 tipos cobertos (`standard_user`, `locked_out_user`, `problem_user`, `performance_glitch_user`, `error_user`, `visual_user`) — suítes isoladas por usuário em `saucedemo-users.spec.ts` (27 testes, total: **49 testes UI**).
--   **Exploração de bugs em profundidade:** 15 bugs confirmados em produção via `expect.soft()` + rastreamento `[BUG-XX]` no console — todos documentados em `docs/UI_TEST_PLAN.md` seção 5b.
+-   **Múltiplos usuários:** Todos os 6 tipos cobertos (`standard_user`, `locked_out_user`, `problem_user`, `performance_glitch_user`, `error_user`, `visual_user`) — suítes isoladas por usuário em `saucedemo-users.spec.ts` (27 testes, total: **48 testes UI**).
+-   **Exploração de bugs em profundidade:** 21 bugs confirmados em produção — cada teste usa `expect(value, '[BUG-XX] diagnóstico')` para falhar com ID e contexto rastreável diretamente no relatório Playwright.
 -   **Validação de formulários:** Campos obrigatórios cobertos no login (UI-14, UI-15) e no checkout (UI-16).
 -   **Fluxo multi-item:** Carrinho com 2 itens e verificação matemática do subtotal (UI-17).
 

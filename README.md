@@ -121,7 +121,7 @@ Saída esperada: download dos browsers Chromium, Firefox e WebKit. Pode levar al
 > npx playwright install --with-deps
 > ```
 
-**Passo 4 — Verificar a instalação**
+**Passo 2 — Verificar a instalação**
 
 ```bash
 npx playwright --version
@@ -129,7 +129,7 @@ npx playwright --version
 
 Saída esperada: `Version 1.44.x` (ou superior).
 
-**Passo 5 — Criar o arquivo de variáveis de ambiente**
+**Passo 3 — Criar o arquivo de variáveis de ambiente**
 
 > **Atenção:** este arquivo é **obrigatório**. Sem ele, os testes de API falham com erro de variável indefinida.
 
@@ -225,13 +225,13 @@ cd ..
 
 ### 5.2 Configuração Newman/Postman
 
-O arquivo `teste_api/api-automation/restful-booker.postman_environment.json` já está preenchido com todas as variáveis. **Nenhuma configuração adicional** é necessária para a suíte Newman.
+O arquivo `teste_api/api_automation/restful-booker.postman_environment.json` já está preenchido com todas as variáveis. **Nenhuma configuração adicional** é necessária para a suíte Newman.
 
 Para usar no Postman GUI:
 1. Abra o Postman
 2. Clique em **Import**
-3. Importe `teste_api/api-automation/restful-booker.postman_collection.json`
-4. Importe `teste_api/api-automation/restful-booker.postman_environment.json`
+3. Importe `teste_api/api_automation/restful-booker.postman_collection.json`
+4. Importe `teste_api/api_automation/restful-booker.postman_environment.json`
 5. Selecione o ambiente **Restful-Booker-Env** no canto superior direito
 6. Clique em **Run collection**
 
@@ -328,17 +328,27 @@ npx playwright test --project=api
 ```
 betalent_chalenge/
 │
+├── .github/
+│   └── workflows/
+│       ├── playwright-tests.yml            # CI/CD — Playwright UI + API
+│       └── api-tests.yml                   # CI/CD — Newman/Postman
+│
 ├── docs/                                   # Documentação principal
 │   ├── UI_TEST_PLAN.md                     # Plano, casos e bugs de UI
 │   ├── API_TEST_PLAN.md                    # Plano, casos e bugs de API
-│   └── restful-booker.postman_collection.json
+│   ├── CICD.md                             # Configuração dos pipelines CI/CD
+│   └── traceability.md                     # Matriz de rastreabilidade
+│
+├── scripts/                                # Geração de relatórios em PDF
+│   ├── generate-playwright-pdf.js
+│   └── generate-newman-pdf.js
 │
 ├── tests/
 │   ├── auth.setup.ts                       # Setup de autenticação (storageState)
 │   ├── api/
 │   │   └── booking.spec.ts                 # 11 testes de API (Playwright)
 │   └── ui/
-│       ├── saucedemo.spec.ts               # 22 testes principais de UI
+│       ├── saucedemo.spec.ts               # 21 testes principais de UI
 │       ├── saucedemo-users.spec.ts         # 27 testes por tipo de usuário
 │       └── pages/                          # Page Object Model (POM)
 │           ├── LoginPage.ts
@@ -348,18 +358,15 @@ betalent_chalenge/
 │
 ├── teste_api/                              # Suíte independente Newman/Postman
 │   ├── README.md                           # Instruções específicas da suíte API
-│   ├── api-automation/
+│   ├── api_automation/
 │   │   ├── restful-booker.postman_collection.json
 │   │   └── restful-booker.postman_environment.json
-│   ├── docs/                               # Documentação detalhada da API
-│   │   ├── api-testing.md
-│   │   ├── bugs-and-risks.md
-│   │   ├── contract-testing.md
-│   │   ├── security-testing.md
-│   │   └── vader-analysis.md
-│   └── .github/
-│       └── workflows/
-│           └── api-tests.yml               # Pipeline CI/CD (GitHub Actions)
+│   └── docs/                               # Documentação detalhada da API
+│       ├── api-testing.md
+│       ├── bugs-and-risks.md
+│       ├── contract-testing.md
+│       ├── security-testing.md
+│       └── vader-analysis.md
 │
 ├── playwright.config.ts                    # Configuração global do Playwright
 ├── package.json
@@ -374,9 +381,9 @@ betalent_chalenge/
 
 | Arquivo | Testes | Descrição |
 |---|---|---|
-| `saucedemo.spec.ts` | 22 | Fluxos principais: login, sort, checkout, cart, a11y |
+| `saucedemo.spec.ts` | 21 | Fluxos principais: login, sort, checkout, cart, a11y |
 | `saucedemo-users.spec.ts` | 27 | Fluxos por tipo de usuário: problem, glitch, error, visual |
-| **Total UI** | **49** | |
+| **Total UI** | **48** | |
 
 **Tipos de usuário cobertos:** `standard_user`, `locked_out_user`, `problem_user`, `performance_glitch_user`, `error_user`, `visual_user`
 
@@ -398,8 +405,9 @@ betalent_chalenge/
 
 | ID | Endpoint | Problema | Severidade |
 |---|---|---|---|
-| BUG-001 | `DELETE /booking` | Retorna `201 Created` em vez de `204 No Content` | Média |
-| BUG-003 | `POST /auth` | Credenciais inválidas retornam `200 OK` com body de erro em vez de `401` | Alta |
+| BUG-001 | `DELETE /booking` | Retorna `201 Created` em vez de `204 No Content` | Baixa |
+| BUG-003 | `POST /auth` | Credenciais inválidas retornam `200 OK` com body de erro em vez de `401` | Média |
+| BUG-004 | `POST /booking` | Campo obrigatório faltando retorna `500 Internal Server Error` em vez de `400 Bad Request` | Alta |
 | BUG-005 | `GET /ping` | Retorna `201 Created` em vez de `200 OK` | Baixa |
 
 ### 9.2 UI — Sauce Demo (resumo por usuário)
@@ -422,11 +430,12 @@ betalent_chalenge/
 | Playwright para UI e API | Unifica o stack — uma única ferramenta, configuração e relatório para ambos os tipos de teste |
 | Page Object Model (POM) | Isola seletores do código de teste, facilitando manutenção quando a UI mudar |
 | `storageState` por describe | Cada suíte de usuário roda com sessão isolada, evitando contaminação entre testes |
-| `expect.soft()` para bugs conhecidos | Documenta defeitos sem quebrar a suíte — o teste continua e registra todos os problemas |
-| Postman/Newman independente | Atende ao requisito de Collection JSON com automação via CLI e CI/CD, complementando a suíte Playwright |
-| Soft assertions + `console.log('[BUG-XX]')` | Rastreabilidade dos bugs diretamente no output da execução sem necessidade de ferramenta adicional |
-| `performance_glitch_user` com `timeout: 15000` | Lentidão intencional da aplicação requer tolerância maior; documentado para evitar falsos positivos |
-| Acessibilidade como soft assertion | Viola WCAG mas não bloqueia CI — permite monitoramento contínuo sem travar o pipeline |
+| `expect(value, '[BUG-XX] mensagem')` | Assertions hard falham o teste quando um bug é detectado; a mensagem carrega o ID do bug e diagnóstico diretamente no relatório Playwright — a suíte continua automaticamente para o próximo `test()` por isolamento padrão do framework |
+| ISO/IEC/IEEE 29119 para documentação | Status PASS/FAIL/BLOCKED/SKIP e Bug IDs nos planos de teste seguem a norma internacional — vocabulário padronizado e rastreabilidade formal entre casos de teste e defeitos |
+| Postman/Newman independente | Atende ao requisito de Collection JSON com automação via CLI e CI/CD; complementa a suíte Playwright para revisores não-técnicos com relatório HTML visual |
+| `performance_glitch_user` com `timeout: 15000` | Lentidão intencional da aplicação requer tolerância maior; documentado para evitar falsos positivos no CI |
+| Mobile Chrome e Safari excluídos do CI | Adicionam ~3 minutos sem valor extra em ambiente headless; executados localmente na validação completa — `chromium` cobre o smoke test no pipeline |
+| Scripts de PDF (`scripts/`) | Relatórios Playwright e Newman convertidos para PDF antes do envio por email — artifacts HTML no GitHub exigem autenticação; PDF chega diretamente na caixa de entrada |
 
 ---
 
@@ -452,7 +461,7 @@ betalent_chalenge/
 | [`docs/UI_TEST_PLAN.md`](./docs/UI_TEST_PLAN.md) | Plano completo de UI: estratégia, casos de teste, bugs por usuário |
 | [`docs/API_TEST_PLAN.md`](./docs/API_TEST_PLAN.md) | Plano completo de API: estratégia, cenários, bugs confirmados |
 | [`docs/traceability.md`](./docs/traceability.md) | Matriz de rastreabilidade: test case → bug ID → feature area |
-| [`teste_api/api-automation/restful-booker.postman_collection.json`](./teste_api/api-automation/restful-booker.postman_collection.json) | Collection Postman para importação |
+| [`teste_api/api_automation/restful-booker.postman_collection.json`](./teste_api/api_automation/restful-booker.postman_collection.json) | Collection Postman para importação |
 | [`teste_api/README.md`](./teste_api/README.md) | Instruções detalhadas da suíte Newman/Postman |
 | [`teste_api/docs/vader-analysis.md`](./teste_api/docs/vader-analysis.md) | Análise heurística VADER sobre os 27 requests |
 | [`teste_api/docs/bugs-and-risks.md`](./teste_api/docs/bugs-and-risks.md) | Bugs e riscos da API documentados |

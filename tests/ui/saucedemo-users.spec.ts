@@ -22,10 +22,7 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
     const srcs = await page.locator('.inventory_item img')
       .evaluateAll((imgs: HTMLImageElement[]) => imgs.map(img => img.getAttribute('src')));
     const uniqueSrcs = new Set(srcs);
-    if (uniqueSrcs.size < srcs.length) {
-      console.log(`[BUG-PU-01] problem_user: ${srcs.length} products, only ${uniqueSrcs.size} unique image(s) — visual defect confirmed`);
-    }
-    expect.soft(uniqueSrcs.size).toBe(srcs.length);
+    expect(uniqueSrcs.size, `[BUG-PU-01] problem_user: ${srcs.length} products but only ${uniqueSrcs.size} unique image(s) — visual defect`).toBe(srcs.length);
   });
 
   test('PU-02: sorting does not reorder products (silent failure)', async ({ page }) => {
@@ -33,20 +30,14 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
     const before = await page.locator('.inventory_item_name').allInnerTexts();
     await productsPage.sortProducts('za');
     const after = await page.locator('.inventory_item_name').allInnerTexts();
-    if (JSON.stringify(before) === JSON.stringify(after)) {
-      console.log('[BUG-PU-02] problem_user: sort Z→A produced no change in product order — silent failure');
-    }
-    expect.soft(after).not.toEqual(before);
+    expect(after, '[BUG-PU-02] problem_user: sort Z→A produced no change in product order').not.toEqual(before);
   });
 
   test('PU-03: add to cart fails for specific products (index 2)', async ({ page }) => {
     const productsPage = new ProductsPage(page);
     await productsPage.addItemToCart(2);
     const badgeVisible = await productsPage.cartBadge.isVisible();
-    if (!badgeVisible) {
-      console.log('[BUG-PU-03] problem_user: cart badge did not appear after add to cart (index 2) — known bug');
-    }
-    expect.soft(badgeVisible).toBeTruthy();
+    expect(badgeVisible, '[BUG-PU-03] problem_user: cart badge did not appear after add to cart (index 2)').toBeTruthy();
   });
 
   test('PU-04: Last Name field in checkout step 1 is broken', async ({ page }) => {
@@ -59,10 +50,7 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
     await page.getByTestId('postalCode').fill('12345');
     await page.getByTestId('continue').click();
     const stillOnStepOne = page.url().includes('checkout-step-one');
-    if (stillOnStepOne) {
-      console.log('[BUG-PU-04] problem_user: cannot proceed past checkout step 1 — Last Name field broken');
-    }
-    expect.soft(stillOnStepOne).toBeFalsy();
+    expect(stillOnStepOne, '[BUG-PU-04] problem_user: cannot proceed past checkout step 1 — Last Name field broken').toBeFalsy();
   });
 
   test('PU-05: all four sort directions fail silently for problem_user', async ({ page }) => {
@@ -110,10 +98,7 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
       if (!correct) failedSorts.push(option);
     }
 
-    if (failedSorts.length > 0) {
-      console.log(`[BUG-PU-05] problem_user: sort options with wrong result order: ${failedSorts.join(', ')}`);
-    }
-    expect.soft(failedSorts).toHaveLength(0);
+    expect(failedSorts, `[BUG-PU-05] problem_user: sort options with wrong result order: ${failedSorts.join(', ')}`).toHaveLength(0);
   });
 
   test('PU-06: product detail page also shows wrong image (same broken src as inventory)', async ({ page }) => {
@@ -123,11 +108,7 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
     const detailImg = page.locator('.inventory_details_img');
     await expect(detailImg).toBeVisible();
     const detailSrc = await detailImg.getAttribute('src');
-    console.log(`[BUG-PU-06] problem_user detail img: ${detailSrc}`);
-    if (detailSrc === inventorySrc) {
-      console.log('[BUG-PU-06] problem_user: product detail shows the same broken image as inventory listing');
-    }
-    expect.soft(detailSrc).not.toBe(inventorySrc);
+    expect(detailSrc, '[BUG-PU-06] problem_user: product detail shows the same broken image as inventory listing').not.toBe(inventorySrc);
   });
 
   test('PU-07: identify all products that cannot be added to cart (indices 0-5)', async ({ page }) => {
@@ -150,10 +131,7 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
       }
     }
 
-    if (failedIndices.length > 0) {
-      console.log(`[BUG-PU-07] problem_user: add-to-cart failed for indices [${failedIndices.join(', ')}] — ${failedIndices.length}/6 items broken`);
-    }
-    expect.soft(failedIndices).toHaveLength(0);
+    expect(failedIndices, `[BUG-PU-07] problem_user: add-to-cart failed for indices [${failedIndices.join(', ')}] — ${failedIndices.length}/6 items broken`).toHaveLength(0);
   });
 
   test('PU-08: console errors generated during problem_user interactions', async ({ page }) => {
@@ -172,11 +150,7 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
     await page.getByTestId('postalCode').fill('12345');
     await page.getByTestId('continue').click();
 
-    if (consoleErrors.length > 0) {
-      console.log(`[BUG-PU-08] problem_user: ${consoleErrors.length} console error(s):`);
-      consoleErrors.forEach(e => console.log(`  → ${e}`));
-    }
-    expect.soft(consoleErrors).toHaveLength(0);
+    expect(consoleErrors, `[BUG-PU-08] problem_user: ${consoleErrors.length} console error(s): ${consoleErrors.join(' | ')}`).toHaveLength(0);
   });
 });
 
@@ -280,10 +254,7 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
     await productsPage.addItemToCart(0);
     const badgeVisible = await productsPage.cartBadge.isVisible();
     const errorVisible = await page.locator('[data-test="error"]').isVisible();
-    if (!badgeVisible) {
-      console.log('[BUG-EU-01] error_user: cart badge not visible after add to cart — known bug');
-    }
-    expect(badgeVisible || errorVisible).toBeTruthy();
+    expect(badgeVisible || errorVisible, '[BUG-EU-01] error_user: neither cart badge nor error message appeared after add to cart').toBeTruthy();
   });
 
   test('EU-02: checkout validates only one missing field at a time (broken multi-field)', async ({ page }) => {
@@ -297,8 +268,7 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
     const error = page.getByTestId('error');
     await expect(error).toBeVisible();
     const errorText = await error.innerText();
-    console.log(`[BUG-EU-02] error_user checkout: "${errorText}" (expected both Last Name + Postal Code errors)`);
-    expect.soft(errorText).toContain('Last Name is required');
+    expect(errorText, `[BUG-EU-02] error_user: checkout error shows "${errorText}" — expected "Last Name is required"`).toContain('Last Name is required');
   });
 
   test('EU-03: invalid postal code format produces silent failure (no error message)', async ({ page }) => {
@@ -311,10 +281,7 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
     await page.getByTestId('postalCode').fill('ABCDE');
     await page.getByTestId('continue').click();
     const errorVisible = await page.getByTestId('error').isVisible();
-    if (!errorVisible) {
-      console.log('[BUG-EU-03] error_user: no error shown for non-numeric postal code — silent failure');
-    }
-    expect.soft(errorVisible).toBeTruthy();
+    expect(errorVisible, '[BUG-EU-03] error_user: no error shown for non-numeric postal code — silent failure').toBeTruthy();
   });
 
   test('EU-04: error_user cannot complete checkout even with valid data', async ({ page }) => {
@@ -323,12 +290,7 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
 
     await productsPage.addItemToCart(0);
     const badgeVisible = await productsPage.cartBadge.isVisible();
-
-    if (!badgeVisible) {
-      console.log('[BUG-EU-04] error_user: add to cart failed — cannot reach checkout');
-      expect.soft(badgeVisible).toBeTruthy();
-      return;
-    }
+    expect(badgeVisible, '[BUG-EU-04] error_user: add to cart failed — cannot reach checkout').toBeTruthy();
 
     await productsPage.cartButton.click();
     await expect(page).toHaveURL(/cart.html/);
@@ -336,18 +298,11 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
     await checkoutPage.fillInformation('John', 'Doe', '12345');
 
     const onStepTwo = page.url().includes('checkout-step-two');
-    if (!onStepTwo) {
-      console.log('[BUG-EU-04] error_user: blocked at checkout step 1 even with valid data');
-      expect.soft(onStepTwo).toBeTruthy();
-      return;
-    }
+    expect(onStepTwo, '[BUG-EU-04] error_user: blocked at checkout step 1 even with valid data').toBeTruthy();
 
     await checkoutPage.finishButton.click();
     const completed = await checkoutPage.completeHeader.isVisible();
-    if (!completed) {
-      console.log('[BUG-EU-04] error_user: checkout finish failed — order not completed');
-    }
-    expect.soft(completed).toBeTruthy();
+    expect(completed, '[BUG-EU-04] error_user: checkout finish failed — order not completed').toBeTruthy();
   });
 
   test('EU-05: sort by price low-to-high works correctly for error_user', async ({ page }) => {
@@ -356,10 +311,7 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
     const prices = await page.locator('.inventory_item_price').allInnerTexts();
     const numeric = prices.map(p => parseFloat(p.replace('$', '')));
     const sorted = [...numeric].sort((a, b) => a - b);
-    if (JSON.stringify(numeric) !== JSON.stringify(sorted)) {
-      console.log('[BUG-EU-05] error_user: sort low→high failed to produce correct price order');
-    }
-    expect(JSON.stringify(numeric)).toBe(JSON.stringify(sorted));
+    expect(numeric, '[BUG-EU-05] error_user: sort low→high failed to produce correct price order').toEqual(sorted);
   });
 
   test('EU-06: console errors triggered by error_user cart interactions', async ({ page }) => {
@@ -373,11 +325,7 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
       await productsPage.addItemToCart(i);
     }
 
-    if (consoleErrors.length > 0) {
-      console.log(`[BUG-EU-06] error_user: ${consoleErrors.length} console error(s) during add-to-cart:`);
-      consoleErrors.forEach(e => console.log(`  → ${e}`));
-    }
-    expect.soft(consoleErrors).toHaveLength(0);
+    expect(consoleErrors, `[BUG-EU-06] error_user: ${consoleErrors.length} console error(s) during add-to-cart: ${consoleErrors.join(' | ')}`).toHaveLength(0);
   });
 });
 
@@ -397,10 +345,7 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
     const srcs = await page.locator('.inventory_item img')
       .evaluateAll((imgs: HTMLImageElement[]) => imgs.map(img => img.getAttribute('src')));
     const uniqueSrcs = new Set(srcs);
-    if (uniqueSrcs.size < srcs.length) {
-      console.log(`[BUG-VU-01] visual_user: ${srcs.length} products, only ${uniqueSrcs.size} unique image(s) — visual defect confirmed`);
-    }
-    expect.soft(uniqueSrcs.size).toBe(srcs.length);
+    expect(uniqueSrcs.size, `[BUG-VU-01] visual_user: ${srcs.length} products but only ${uniqueSrcs.size} unique image(s) — visual defect`).toBe(srcs.length);
   });
 
   test('VU-02: first product shows wrong image after sorting A→Z', async ({ page }) => {
@@ -408,10 +353,7 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
     const imgBefore = await page.locator('.inventory_item img').first().getAttribute('src');
     await productsPage.sortProducts('az');
     const imgAfter = await page.locator('.inventory_item img').first().getAttribute('src');
-    if (imgBefore === imgAfter) {
-      console.log('[BUG-VU-02] visual_user: first product image unchanged after A→Z sort — wrong image displayed');
-    }
-    expect.soft(imgBefore).not.toBe(imgAfter);
+    expect(imgBefore, '[BUG-VU-02] visual_user: first product image unchanged after A→Z sort — wrong image displayed').not.toBe(imgAfter);
   });
 
   test('VU-03: checkout button is visually misaligned (position logged for regression)', async ({ page }) => {
@@ -421,9 +363,8 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
     const checkoutBtn = page.getByTestId('checkout');
     await expect(checkoutBtn).toBeVisible();
     const box = await checkoutBtn.boundingBox();
-    console.log(`[BUG-VU-03] visual_user checkout btn: x=${box?.x?.toFixed(0)}, y=${box?.y?.toFixed(0)}, w=${box?.width?.toFixed(0)}, h=${box?.height?.toFixed(0)}`);
-    expect(box).not.toBeNull();
-    expect.soft(box!.height).toBeGreaterThan(0);
+    expect(box, '[BUG-VU-03] visual_user: checkout button bounding box is null').not.toBeNull();
+    expect(box!.height, `[BUG-VU-03] visual_user: checkout button height is ${box?.height} — expected > 0`).toBeGreaterThan(0);
   });
 
   test('VU-04: product name text alignment is inconsistent across items', async ({ page }) => {
@@ -437,10 +378,7 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
       alignments.push(align);
     }
     const uniqueAlignments = new Set(alignments);
-    if (uniqueAlignments.size > 1) {
-      console.log(`[BUG-VU-04] visual_user: inconsistent text-align across products: ${[...uniqueAlignments].join(', ')}`);
-    }
-    expect.soft(uniqueAlignments.size).toBe(1);
+    expect(uniqueAlignments.size, `[BUG-VU-04] visual_user: inconsistent text-align across products: ${[...uniqueAlignments].join(', ')}`).toBe(1);
   });
 
   test('VU-05: product detail page shows broken 404 image', async ({ page }) => {
@@ -452,10 +390,7 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
     await expect(detailImg).toBeVisible();
     const detailSrc = await detailImg.getAttribute('src');
     const isBroken = detailSrc?.includes('sl-404') || detailSrc === inventorySrc;
-    if (isBroken) {
-      console.log(`[BUG-VU-05] visual_user: product detail page shows broken image: ${detailSrc}`);
-    }
-    expect.soft(isBroken).toBeFalsy();
+    expect(isBroken, `[BUG-VU-05] visual_user: product detail page shows broken image: ${detailSrc}`).toBeFalsy();
   });
 
   test('VU-06: broken images persist across all four sort directions', async ({ page }) => {
@@ -471,10 +406,7 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
       if (hasBroken) sortsWithBrokenImages.push(sort);
     }
 
-    if (sortsWithBrokenImages.length > 0) {
-      console.log(`[BUG-VU-06] visual_user: broken 404 images persist after sorts: ${sortsWithBrokenImages.join(', ')}`);
-    }
-    expect.soft(sortsWithBrokenImages).toHaveLength(0);
+    expect(sortsWithBrokenImages, `[BUG-VU-06] visual_user: broken 404 images persist after sorts: ${sortsWithBrokenImages.join(', ')}`).toHaveLength(0);
   });
 
   test('VU-07: checkout button on cart page is positioned off-screen (x > 80% viewport)', async ({ page }) => {
@@ -489,10 +421,7 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
     const viewportWidth = page.viewportSize()?.width ?? 1280;
     const isOffscreen = (box?.x ?? 0) > viewportWidth * 0.8;
 
-    if (isOffscreen || box?.y === 0) {
-      console.log(`[BUG-VU-07] visual_user: cart checkout button at abnormal position x=${box?.x?.toFixed(0)}, y=${box?.y?.toFixed(0)} (viewport: ${viewportWidth}px)`);
-    }
-    expect.soft(isOffscreen).toBeFalsy();
-    expect.soft(box?.y).toBeGreaterThan(0);
+    expect(isOffscreen, `[BUG-VU-07] visual_user: cart checkout button is off-screen (x=${box?.x?.toFixed(0)}, viewport=${viewportWidth}px)`).toBeFalsy();
+    expect(box?.y, `[BUG-VU-07] visual_user: cart checkout button y=${box?.y} — expected > 0`).toBeGreaterThan(0);
   });
 });

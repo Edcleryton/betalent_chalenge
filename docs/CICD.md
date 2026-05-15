@@ -62,9 +62,9 @@ O Gmail exige uma **senha de aplicativo** específica para envio via SMTP extern
 
 ### Playwright Tests
 
-- **Subject:** `✅ Playwright Tests — Run #42 (success)` ou `❌ Playwright Tests — Run #42 (failure)`
+- **Subject:** `✅ Playwright Tests — Run #42 (success)` ou `⚠️ Playwright Tests — Run #42 (failure)`
 - **Body:** tabela com status, projetos executados, trigger, branch, commit SHA e link para o run
-- **Anexo:** `playwright-report.zip` — relatório HTML do Playwright compactado
+- **Anexo:** `reports/summary.pdf` — resumo dos resultados em PDF
 
 > O email é enviado mesmo quando os testes **falham**. Isso é intencional — o relatório de falha é mais importante do que o de sucesso.
 
@@ -130,10 +130,12 @@ checkout → setup Node 20 (cache npm) → npm ci → npm test
 
 ```
 checkout → setup Node 20 (cache npm) → npm ci
+  → cache Playwright browsers (~/.cache/ms-playwright)
   → playwright install --with-deps chromium
-  → playwright test --project=api --project=chromium (continue-on-error)
+  → playwright test --project=api --project=chromium
   → zip playwright-report/ → upload playwright-report.zip (artifact 30d)
-  → email com playwright-report.zip anexado
+  → generate-playwright-pdf.js → converter HTML → PDF
+  → email com reports/summary.pdf anexado
 ```
 
 **Por que `--project=api --project=chromium` e não todos os projetos?**

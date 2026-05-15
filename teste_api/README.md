@@ -12,7 +12,7 @@ Suíte completa de testes de API para o desafio prático de QA da BeTalent, cobr
 | **Newman** | ^6.1.2 | Execução automatizada via CLI |
 | **newman-reporter-htmlextra** | ^1.22.11 | Geração de relatório HTML visual |
 | **GitHub Actions** | — | Pipeline de CI/CD automatizado |
-| **Node.js** | >= 18 | Ambiente de execução |
+| **Node.js** | >= 20 | Ambiente de execução |
 
 ---
 
@@ -42,7 +42,7 @@ Suíte completa de testes de API para o desafio prático de QA da BeTalent, cobr
 
 ## Pré-requisitos
 
-- **Node.js** >= 18 instalado ([download](https://nodejs.org/))
+- **Node.js** >= 20 instalado ([download](https://nodejs.org/))
 - Conexão com a internet (a API é pública: `https://restful-booker.herokuapp.com`)
 
 ---

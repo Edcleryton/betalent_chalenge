@@ -11,14 +11,14 @@ test.describe('Sauce Demo - Login Tests', () => {
   test('UI-01: should login with standard_user', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('standard_user', 'secret_sauce');
+    await loginPage.login('standard_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(page).toHaveURL(/inventory.html/);
   });
 
   test('UI-02: should show error for locked_out_user', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('locked_out_user', 'secret_sauce');
+    await loginPage.login('locked_out_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(loginPage.errorMessage).toBeVisible();
     await expect(loginPage.errorMessage).toContainText('Sorry, this user has been locked out.');
   });
@@ -26,14 +26,14 @@ test.describe('Sauce Demo - Login Tests', () => {
   test('UI-09: should login with problem_user and reach inventory', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('problem_user', 'secret_sauce');
+    await loginPage.login('problem_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(page).toHaveURL(/inventory.html/);
   });
 
   test('UI-10: should login with performance_glitch_user (slow login)', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('performance_glitch_user', 'secret_sauce');
+    await loginPage.login('performance_glitch_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(page).toHaveURL(/inventory.html/, { timeout: 15000 });
   });
 
@@ -41,7 +41,7 @@ test.describe('Sauce Demo - Login Tests', () => {
     const loginPage = new LoginPage(page);
     const productsPage = new ProductsPage(page);
     await loginPage.navigate();
-    await loginPage.login('error_user', 'secret_sauce');
+    await loginPage.login('error_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(page).toHaveURL(/inventory.html/);
 
     // error_user: adding item to cart triggers an error message (known bug)
@@ -56,7 +56,7 @@ test.describe('Sauce Demo - Login Tests', () => {
   test('UI-13: visual_user - login succeeds and inventory loads with visual defects', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('visual_user', 'secret_sauce');
+    await loginPage.login('visual_user', process.env.UI_PASSWORD ?? 'secret_sauce');
     await expect(page).toHaveURL(/inventory.html/);
 
     // visual_user: page loads but images are broken (src mismatch — known visual bug)
@@ -70,11 +70,8 @@ test.describe('Sauce Demo - Login Tests', () => {
     );
     const uniqueSrcs = new Set(srcs);
     // Known bug: visual_user repeats the same image src for multiple products
-    // We document it here — if all images have unique src, the bug was fixed
-    if (uniqueSrcs.size < count) {
-      console.log(`[BUG] visual_user: ${count} products but only ${uniqueSrcs.size} unique image(s) — visual defect confirmed`);
-    }
-    expect.soft(uniqueSrcs.size).toBe(count);
+    // If all images have unique src, the bug was fixed
+    expect(uniqueSrcs.size, `[BUG-VU-01] visual_user: ${count} products but only ${uniqueSrcs.size} unique image(s) — visual defect`).toBe(count);
   });
 });
 
@@ -163,11 +160,7 @@ test.describe('Sauce Demo - Authenticated Flow', () => {
   // Nível 2 — Acessibilidade
   test('UI-07/08: should check for accessibility violations on inventory page', async ({ page }) => {
     const results = await new AxeBuilder({ page }).analyze();
-    if (results.violations.length > 0) {
-      console.log(`Accessibility violations found: ${results.violations.length}`);
-      results.violations.forEach(v => console.log(`  [${v.impact}] ${v.id}: ${v.description}`));
-    }
-    expect.soft(results.violations).toEqual([]);
+    expect(results.violations, `UI-07/08: ${results.violations.length} accessibility violation(s) on inventory page`).toEqual([]);
   });
 });
 
@@ -196,11 +189,7 @@ test.describe('Sauce Demo - Login Validation', () => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
     const results = await new AxeBuilder({ page }).analyze();
-    if (results.violations.length > 0) {
-      console.log(`Login page a11y violations: ${results.violations.length}`);
-      results.violations.forEach(v => console.log(`  [${v.impact}] ${v.id}: ${v.description}`));
-    }
-    expect.soft(results.violations).toEqual([]);
+    expect(results.violations, `UI-18: ${results.violations.length} accessibility violation(s) on login page`).toEqual([]);
   });
 });
 
@@ -255,10 +244,6 @@ test.describe('Sauce Demo - Cart & Checkout Validation', () => {
     await productsPage.cartButton.click();
     await expect(page).toHaveURL(/cart.html/);
     const results = await new AxeBuilder({ page }).analyze();
-    if (results.violations.length > 0) {
-      console.log(`Cart page a11y violations: ${results.violations.length}`);
-      results.violations.forEach(v => console.log(`  [${v.impact}] ${v.id}: ${v.description}`));
-    }
-    expect.soft(results.violations).toEqual([]);
+    expect(results.violations, `UI-19: ${results.violations.length} accessibility violation(s) on cart page`).toEqual([]);
   });
 });

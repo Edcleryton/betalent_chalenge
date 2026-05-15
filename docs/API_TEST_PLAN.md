@@ -52,7 +52,7 @@ Não é duplicação — são ferramentas para públicos diferentes:
 
 ## 3. Ferramentas de Automação
 -   **Playwright APIRequestContext:** Utilizado para a automação principal integrada à suíte de testes.
--   **Postman Collection:** Disponível em `docs/restful-booker.postman_collection.json` para consulta manual e conformidade com os requisitos.
+-   **Postman Collection:** Disponível em `teste_api/api_automation/restful-booker.postman_collection.json` para consulta manual e conformidade com os requisitos.
 
 ## 3. Cenários de Teste
 
