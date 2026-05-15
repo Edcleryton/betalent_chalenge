@@ -79,6 +79,74 @@ Os testes afirmam o comportamento correto segundo a especificação REST (RFC 72
 | API-10 | Consulta de ID inexistente | GET | 404 Not Found | PASS | — |
 | API-11 | Health check do serviço (/ping) | GET | 200 OK | FAIL | BUG-005 |
 
+## 3.1 Casos de Teste VADER (`booking_vader.spec.ts`)
+
+37 casos organizados em 5 dimensões heurísticas. Prefixo **TC-\*** afirma o comportamento correto por RFC (falha = bug ativo). Sufixo **TC-\*-REG** documenta o comportamento atual com bug (passa = bug presente, alerta quando corrigido).
+
+### D — Validação de Dados
+
+| ID | Cenário | Comportamento Esperado | Status | Bug ID |
+| :--- | :--- | :--- | :--- | :--- |
+| TC-D01 | `totalprice: -1` deve ser rejeitado | 400 Bad Request | FAIL | BUG-007 |
+| TC-D02 | `totalprice: 0` deve ser rejeitado | 400 Bad Request | FAIL | — |
+| TC-D03 | `totalprice: 0.5` deve ser aceito | 200 OK | PASS | — |
+| TC-D04 | Datas invertidas devem ser rejeitadas | 400 Bad Request | FAIL | BUG-008 |
+| TC-D05 | `GET /booking?checkin=abc` não deve crashar | 400 Bad Request | FAIL | BUG-006 |
+| TC-D06 | `firstname` em branco deve ser rejeitado | 400 Bad Request | PASS | — |
+| TC-D07 | `totalprice` ausente deve ser rejeitado | 400 Bad Request | FAIL | BUG-004 |
+| TC-D08 | `depositpaid` não-booleano deve ser rejeitado | 400 Bad Request | PASS | — |
+| TC-D09 | `checkin` em formato inválido deve ser rejeitado | 400 Bad Request | PASS | — |
+| TC-D10 | `additionalneeds` numérico deve ser rejeitado | 400 Bad Request | FAIL | — |
+| TC-D01-REG | `totalprice: -1` atualmente aceito | 200 OK | PASS | BUG-007 |
+| TC-D02-REG | `totalprice: 0` atualmente aceito | 200 OK | PASS | — |
+| TC-D04-REG | Datas invertidas atualmente aceitas | 200 OK | PASS | BUG-008 |
+| TC-D05-REG | `GET /booking?checkin=abc` retorna 500 | 500 | PASS | BUG-006 |
+| TC-D10-REG | `additionalneeds` numérico atualmente aceito | 200 OK | PASS | — |
+
+### A — Autorização
+
+| ID | Cenário | Comportamento Esperado | Status | Bug ID |
+| :--- | :--- | :--- | :--- | :--- |
+| TC-A01 | Credenciais inválidas devem retornar 401 | 401 Unauthorized | FAIL | BUG-003 |
+| TC-A02 | `DELETE` sem token deve ser bloqueado | 403 Forbidden | FAIL | — |
+| TC-A03 | `PUT` sem token deve ser bloqueado | 403 Forbidden | FAIL | — |
+| TC-A04 | `PATCH` sem token deve ser bloqueado | 403 Forbidden | PASS | — |
+| TC-A01-REG | Credenciais inválidas retornam 200 + body de erro | 200 + badcredentials | PASS | BUG-003 |
+| TC-A03-REG | `PUT` sem token retorna 403 | 403 | PASS | — |
+
+### V — Verbos HTTP
+
+| ID | Cenário | Comportamento Esperado | Status | Bug ID |
+| :--- | :--- | :--- | :--- | :--- |
+| TC-V01 | `POST /booking/:id` deve retornar 405 | 405 Method Not Allowed | FAIL | — |
+| TC-V02 | `GET /ping` deve retornar 200 | 200 OK | FAIL | BUG-005 |
+| TC-V03 | `DELETE /booking/:id` deve retornar 204 | 204 No Content | FAIL | BUG-001 |
+| TC-V01-REG | `POST /booking/:id` comportamento atual | 404 | PASS | — |
+| TC-V02-REG | `GET /ping` retorna 201 | 201 | PASS | BUG-005 |
+| TC-V03-REG | `DELETE /booking/:id` retorna 201 | 201 | PASS | BUG-001 |
+
+### E — Formato de Erros
+
+| ID | Cenário | Comportamento Esperado | Status | Bug ID |
+| :--- | :--- | :--- | :--- | :--- |
+| TC-E01 | Resposta 404 deve ter `Content-Type: application/json` | JSON + campo de mensagem | FAIL | BUG-009 |
+| TC-E02 | Resposta 403 deve ter `Content-Type: application/json` | JSON + campo de mensagem | FAIL | BUG-009 |
+| TC-E03 | Resposta 500 deve ter `Content-Type: application/json` | JSON | FAIL | BUG-009 |
+| TC-E01-REG | 404 retorna `text/plain` | text/plain | PASS | BUG-009 |
+| TC-E02-REG | 403 retorna `text/plain` | text/plain | PASS | BUG-009 |
+| TC-E03-REG | 500 retorna `text/plain` | text/plain | PASS | BUG-009 |
+
+### R — Responsividade / SLA
+
+| ID | Cenário | SLA | Status |
+| :--- | :--- | :--- | :--- |
+| TC-R01 | `POST /auth` deve responder em < 500 ms | 500 ms | PASS |
+| TC-R02 | `POST /booking` deve responder em < 500 ms | 500 ms | PASS |
+| TC-R03 | `GET /booking/:id` deve responder em < 500 ms | 500 ms | PASS |
+| TC-R04 | `GET /ping` deve responder em < 5000 ms | 5000 ms | PASS |
+
+---
+
 ## 4. Diferenciais (Nível 2)
 -   **Segurança:** Validação de acesso proibido (403) ao tentar manipular dados sem o cookie de autenticação.
 -   **Automação via Scripts:** Scripts de automação robustos em TypeScript/Playwright que garantem o ciclo de vida completo do dado (CRUD + PATCH + filtros).
@@ -101,6 +169,10 @@ Utilizadas via arquivo `.env`:
 | BUG-003 | `POST /auth` (credenciais inválidas) | 200 OK + body de erro | 401 Unauthorized | Média |
 | BUG-004 | `POST /booking` (campo ausente) | 500 Internal Server Error | 400 Bad Request | Alta |
 | BUG-005 | `GET /ping` | 201 Created | 200 OK | Baixa |
+| BUG-006 | `GET /booking?checkin=abc` | 500 Internal Server Error | 400 Bad Request | Alta |
+| BUG-007 | `POST /booking` (`totalprice: -1`) | 200 OK — aceito sem validação | 400 Bad Request | Média |
+| BUG-008 | `POST /booking` (datas invertidas) | 200 OK — aceito sem validação | 400 Bad Request | Média |
+| BUG-009 | Respostas de erro 4xx/5xx | `text/plain` | `application/json` | Baixa |
 
 > Análise completa com todas as dimensões VADER: `teste_api/docs/vader-analysis.md`
 > Registro completo de bugs e riscos: `teste_api/docs/bugs-and-risks.md`

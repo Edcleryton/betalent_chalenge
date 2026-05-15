@@ -346,7 +346,8 @@ betalent_chalenge/
 ├── tests/
 │   ├── auth.setup.ts                       # Setup de autenticação (storageState)
 │   ├── api/
-│   │   └── booking.spec.ts                 # 11 testes de API (Playwright)
+│   │   ├── booking.spec.ts                 # 11 testes de API (Playwright)
+│   │   └── booking_vader.spec.ts           # 37 casos de teste VADER — D, A, V, E, R
 │   └── ui/
 │       ├── saucedemo.spec.ts               # 21 testes principais de UI
 │       ├── saucedemo-users.spec.ts         # 27 testes por tipo de usuário
@@ -394,8 +395,9 @@ betalent_chalenge/
 | Suite | Testes | Cobertura |
 |---|---|---|
 | Playwright (`booking.spec.ts`) | 11 | CRUD, PATCH, filtros, 404, health check, segurança |
+| Playwright VADER (`booking_vader.spec.ts`) | 37 | Dados, Autorização, Verbos HTTP, Erros, Responsividade |
 | Postman/Newman | 27 requests / 53 asserções | CRUD + contrato + segurança + performance |
-| **Total API** | **38** | |
+| **Total Playwright API** | **48** | |
 
 ---
 
@@ -409,6 +411,10 @@ betalent_chalenge/
 | BUG-003 | `POST /auth` | Credenciais inválidas retornam `200 OK` com body de erro em vez de `401` | Média |
 | BUG-004 | `POST /booking` | Campo obrigatório faltando retorna `500 Internal Server Error` em vez de `400 Bad Request` | Alta |
 | BUG-005 | `GET /ping` | Retorna `201 Created` em vez de `200 OK` | Baixa |
+| BUG-006 | `GET /booking?checkin=abc` | Parâmetro de data inválido retorna `500 Internal Server Error` em vez de `400 Bad Request` | Alta |
+| BUG-007 | `POST /booking` | Preço negativo (`totalprice: -1`) é aceito com `200 OK` sem validação | Média |
+| BUG-008 | `POST /booking` | Datas invertidas (checkin após checkout) são aceitas com `200 OK` sem validação | Média |
+| BUG-009 | Respostas de erro (4xx/5xx) | Body de erro retornado como `text/plain` em vez de `application/json` | Baixa |
 
 ### 9.2 UI — Sauce Demo (resumo por usuário)
 
@@ -436,6 +442,7 @@ betalent_chalenge/
 | `performance_glitch_user` com `timeout: 15000` | Lentidão intencional da aplicação requer tolerância maior; documentado para evitar falsos positivos no CI |
 | Mobile Chrome e Safari excluídos do CI | Adicionam ~3 minutos sem valor extra em ambiente headless; executados localmente na validação completa — `chromium` cobre o smoke test no pipeline |
 | Scripts de PDF (`scripts/`) | Relatórios Playwright e Newman convertidos para PDF antes do envio por email — artifacts HTML no GitHub exigem autenticação; PDF chega diretamente na caixa de entrada |
+| TC / TC-REG por dimensão VADER | Testes `TC-*` afirmam o comportamento correto por RFC — falham enquanto o bug está ativo e passarão quando corrigido. Testes `TC-*-REG` documentam o comportamento atual com bug — passam enquanto o bug está presente e alertam quando ele é corrigido. Cobertura bidirecional em 5 dimensões: Dados (D), Autorização (A), Verbos HTTP (V), Erros (E), Responsividade (R) |
 
 ---
 
