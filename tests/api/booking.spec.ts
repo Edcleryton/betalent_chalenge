@@ -4,8 +4,6 @@ const API_URL  = process.env.API_URL      || 'https://restful-booker.herokuapp.c
 const USER     = process.env.API_USER     || 'admin';
 const PASSWORD = process.env.API_PASSWORD || 'password123';
 
-// ─── helpers ────────────────────────────────────────────────────────────────
-
 type BookingData = {
   firstname: string; lastname: string; totalprice: number; depositpaid: boolean;
   bookingdates: { checkin: string; checkout: string };
@@ -36,8 +34,6 @@ async function createBooking(
   });
   return (await res.json()).bookingid;
 }
-
-// ─── testes ─────────────────────────────────────────────────────────────────
 
 test.describe('Restful-Booker API Testing', () => {
 
@@ -89,7 +85,7 @@ test.describe('Restful-Booker API Testing', () => {
     const response  = await request.delete(`${API_URL}/booking/${bookingId}`, {
       headers: { 'Content-Type': 'application/json', Cookie: `token=${token}` },
     });
-    expect(response.status()).toBe(204); // BUG-001: API retorna 201 em vez de 204
+    expect(response.status()).toBe(204);
 
     const getResponse = await request.get(`${API_URL}/booking/${bookingId}`);
     expect(getResponse.status()).toBe(404);
@@ -157,7 +153,7 @@ test.describe('Restful-Booker API Testing', () => {
 
   test('should return health check response (GET /ping)', async ({ request }) => {
     const response = await request.get(`${API_URL}/ping`);
-    expect(response.status()).toBe(200); // BUG-005: API retorna 201
+    expect(response.status()).toBe(200);
   });
 
 });

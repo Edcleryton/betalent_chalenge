@@ -4,8 +4,6 @@ const API_URL  = process.env.API_URL      || 'https://restful-booker.herokuapp.c
 const USER     = process.env.API_USER     || 'admin';
 const PASSWORD = process.env.API_PASSWORD || 'password123';
 
-// ─── helpers ────────────────────────────────────────────────────────────────
-
 async function getToken(request: Parameters<Parameters<typeof test>[1]>[0]['request']): Promise<string> {
   const res = await request.post(`${API_URL}/auth`, {
     headers: { 'Content-Type': 'application/json' },
@@ -27,11 +25,6 @@ async function createBooking(
   });
   return (await res.json()).bookingid;
 }
-
-// ─── D — Validação de Dados ──────────────────────────────────────────────────
-// Cobertura derivada da dimensão D do VADER.
-// TC-D01..D10: comportamento correto esperado (falham = bug ativo).
-// TC-D01-REG..: comportamento atual da API (passam = bug ainda presente).
 
 test.describe('TC — D: Validação de Dados', () => {
 
@@ -226,10 +219,6 @@ test.describe('TC — D: Validação de Dados', () => {
 
 });
 
-// ─── A — Autorização ─────────────────────────────────────────────────────────
-// TC-A01..A04: comportamento correto esperado.
-// TC-A01-REG..: comportamento atual da API (BUG-A01 confirmado).
-
 test.describe('TC — A: Autorização', () => {
 
   test('TC-A01 — POST /auth com username vazio deve retornar 401', async ({ request }) => {
@@ -261,7 +250,6 @@ test.describe('TC — A: Autorização', () => {
     const response = await request.delete(`${API_URL}/booking/${bookingId}`, {
       headers: { 'Content-Type': 'application/json', Authorization: `Basic ${credentials}` },
     });
-    // BUG-001 (DELETE → 201 em vez de 204) se aplica — aceita ambos
     expect([201, 204]).toContain(response.status());
   });
 
@@ -291,8 +279,6 @@ test.describe('TC — A: Autorização', () => {
 
 });
 
-// ─── V — Verbos HTTP ─────────────────────────────────────────────────────────
-
 test.describe('TC — V: Verbos HTTP', () => {
 
   test('TC-V01 — POST em /booking/:id deve retornar 405 (Method Not Allowed)', async ({ request }) => {
@@ -300,7 +286,6 @@ test.describe('TC — V: Verbos HTTP', () => {
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       data: { firstname: 'Test' },
     });
-    // RFC 7231 §6.5.5: 405 quando o método não é suportado no recurso
     expect(response.status()).toBe(405);
   });
 
@@ -314,7 +299,6 @@ test.describe('TC — V: Verbos HTTP', () => {
 
   test('TC-V02 — GET /ping deve retornar 200', async ({ request }) => {
     const response = await request.get(`${API_URL}/ping`);
-    // RFC 7231: health check deve retornar 200 OK, não 201 Created
     expect(response.status()).toBe(200);
   });
 
@@ -329,7 +313,6 @@ test.describe('TC — V: Verbos HTTP', () => {
     const response  = await request.delete(`${API_URL}/booking/${bookingId}`, {
       headers: { 'Content-Type': 'application/json', Cookie: `token=${token}` },
     });
-    // RFC 7231: DELETE bem-sucedido deve retornar 204 No Content, não 201 Created
     expect(response.status()).toBe(204);
   });
 
@@ -343,8 +326,6 @@ test.describe('TC — V: Verbos HTTP', () => {
   });
 
 });
-
-// ─── R — Responsividade / SLA ────────────────────────────────────────────────
 
 test.describe('TC — R: Responsividade / SLA', () => {
 
@@ -392,10 +373,6 @@ test.describe('TC — R: Responsividade / SLA', () => {
   });
 
 });
-
-// ─── E — Formato de Erros ────────────────────────────────────────────────────
-// TC-E01..E03: comportamento correto esperado (JSON estruturado).
-// TC-E01-REG..: comportamento atual (texto plano — BUG-E01).
 
 test.describe('TC — E: Formato de Erros', () => {
 
