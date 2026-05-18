@@ -18,6 +18,7 @@ jobs:
       UI_URL: ${{ secrets.UI_URL }}
       API_USER: ${{ secrets.API_USER }}
       API_PASSWORD: ${{ secrets.API_PASSWORD }}
+      UI_PASSWORD: ${{ secrets.UI_PASSWORD }}
 
     steps:
       - name: Checkout repository
