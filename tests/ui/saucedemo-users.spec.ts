@@ -168,8 +168,23 @@ test.describe('Sauce Demo - performance_glitch_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login(PERFORMANCE_GLITCH_USER, UI_PASSWORD);
-    await expect(page).toHaveURL(/inventory.html/, { timeout: SLOW });
+
+    const start = Date.now();
+    const LOGIN_THRESHOLD = 3000;
+
+    try {
+      await loginPage.login(PERFORMANCE_GLITCH_USER, UI_PASSWORD);
+      await expect(page).toHaveURL(/inventory.html/, { timeout: SLOW });
+
+      const elapsed = Date.now() - start;
+      if (elapsed > LOGIN_THRESHOLD) {
+        throw new Error(`[BUG-PGU] Login demorou ${elapsed}ms — limite: ${LOGIN_THRESHOLD}ms`);
+      }
+    } catch (error: any) {
+      if (error.message && error.message.includes('[BUG-PGU]')) throw error;
+      const elapsed = Date.now() - start;
+      throw new Error(`[BUG-PGU] Login falhou após ${elapsed}ms — lentidão extrema impediu acesso`);
+    }
   });
 
   test.afterEach(async ({ page }) => {
