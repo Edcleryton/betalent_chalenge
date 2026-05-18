@@ -27,6 +27,18 @@ async function createBooking(
 }
 
 test.describe('TC — D: Validação de Dados', () => {
+  const createdIds: number[] = [];
+
+  test.afterEach(async ({ request }) => {
+    if (createdIds.length === 0) return;
+    const token = await getToken(request);
+    for (const id of createdIds) {
+      await request.delete(`${API_URL}/booking/${id}`, {
+        headers: { 'Content-Type': 'application/json', Cookie: `token=${token}` },
+      });
+    }
+    createdIds.length = 0;
+  });
 
   test('TC-D01 — totalprice negativo deve retornar 400', async ({ request }) => {
     const response = await request.post(`${API_URL}/booking`, {
@@ -37,6 +49,7 @@ test.describe('TC — D: Validação de Dados', () => {
         additionalneeds: 'None',
       },
     });
+    if (response.status() === 200) createdIds.push((await response.json()).bookingid);
     expect(response.status()).toBe(400);
   });
 
@@ -51,6 +64,7 @@ test.describe('TC — D: Validação de Dados', () => {
     });
     expect(createRes.status()).toBe(200);
     const created = await createRes.json();
+    createdIds.push(created.bookingid);
     expect(created.bookingid).toBeDefined();
     expect(created.booking.totalprice).toBe(-100);
 
@@ -70,6 +84,7 @@ test.describe('TC — D: Validação de Dados', () => {
         additionalneeds: 'None',
       },
     });
+    if (response.status() === 200) createdIds.push((await response.json()).bookingid);
     expect(response.status()).toBe(400);
   });
 
@@ -84,8 +99,9 @@ test.describe('TC — D: Validação de Dados', () => {
     });
     expect(response.status()).toBe(200);
     const body = await response.json();
+    createdIds.push(body.bookingid);
     expect(body.bookingid).toBeDefined();
-    expect.soft(body.booking.totalprice).toBeDefined();
+    expect(body.booking.totalprice).toBeDefined();
   });
 
   test('TC-D03 — depositpaid como string não deve causar crash', async ({ request }) => {
@@ -98,6 +114,7 @@ test.describe('TC — D: Validação de Dados', () => {
       },
     });
     expect(response.status()).not.toBe(500);
+    if (response.status() === 200) createdIds.push((await response.json()).bookingid);
   });
 
   test('TC-D04 — checkin posterior ao checkout deve retornar 400', async ({ request }) => {
@@ -109,6 +126,7 @@ test.describe('TC — D: Validação de Dados', () => {
         additionalneeds: 'None',
       },
     });
+    if (response.status() === 200) createdIds.push((await response.json()).bookingid);
     expect(response.status()).toBe(400);
   });
 
@@ -123,6 +141,7 @@ test.describe('TC — D: Validação de Dados', () => {
     });
     expect(response.status()).toBe(200);
     const body = await response.json();
+    createdIds.push(body.bookingid);
     expect(body.booking.bookingdates.checkin).toBe('2026-06-10');
     expect(body.booking.bookingdates.checkout).toBe('2026-06-01');
   });
@@ -136,6 +155,7 @@ test.describe('TC — D: Validação de Dados', () => {
         additionalneeds: 'None',
       },
     });
+    if (response.status() === 200) createdIds.push((await response.json()).bookingid);
     expect(response.status()).toBe(400);
   });
 
@@ -149,6 +169,7 @@ test.describe('TC — D: Validação de Dados', () => {
       },
     });
     expect(response.status()).not.toBe(400);
+    if (response.status() === 200) createdIds.push((await response.json()).bookingid);
   });
 
   test('TC-D06 — firstname com 10.000 chars não deve causar crash', async ({ request }) => {
@@ -161,6 +182,7 @@ test.describe('TC — D: Validação de Dados', () => {
       },
     });
     expect(response.status()).not.toBe(500);
+    if (response.status() === 200) createdIds.push((await response.json()).bookingid);
   });
 
   test('TC-D07 — XSS no firstname não deve causar crash e deve ser armazenado como-está', async ({ request }) => {
@@ -176,6 +198,7 @@ test.describe('TC — D: Validação de Dados', () => {
     expect(response.status()).not.toBe(500);
     if (response.status() === 200) {
       const body = await response.json();
+      createdIds.push(body.bookingid);
       expect(body.booking.firstname).toBe(xssPayload);
     }
   });
@@ -189,7 +212,9 @@ test.describe('TC — D: Validação de Dados', () => {
       },
     });
     expect(response.status()).toBe(200);
-    expect((await response.json()).bookingid).toBeDefined();
+    const body = await response.json();
+    expect(body.bookingid).toBeDefined();
+    createdIds.push(body.bookingid);
   });
 
   test('TC-D09 — GET /booking?firstname= deve retornar 200 sem crash', async ({ request }) => {
@@ -264,8 +289,8 @@ test.describe('TC — A: Autorização', () => {
         headers: { 'Content-Type': 'application/json' },
         data,
       });
-      expect.soft(response.status(), `${label}: status`).toBe(200);
-      expect.soft((await response.json()).reason, `${label}: reason`).toBe('Bad credentials');
+      expect(response.status(), `${label}: status`).toBe(200);
+      expect((await response.json()).reason, `${label}: reason`).toBe('Bad credentials');
     }
   });
 
@@ -328,10 +353,22 @@ test.describe('TC — V: Verbos HTTP', () => {
 });
 
 test.describe('TC — R: Responsividade / SLA', () => {
+  const createdIds: number[] = [];
+
+  test.afterEach(async ({ request }) => {
+    if (createdIds.length === 0) return;
+    const token = await getToken(request);
+    for (const id of createdIds) {
+      await request.delete(`${API_URL}/booking/${id}`, {
+        headers: { 'Content-Type': 'application/json', Cookie: `token=${token}` },
+      });
+    }
+    createdIds.length = 0;
+  });
 
   test('TC-R01 — POST /booking deve responder em menos de 500ms', async ({ request }) => {
     const start = Date.now();
-    await request.post(`${API_URL}/booking`, {
+    const res = await request.post(`${API_URL}/booking`, {
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       data: {
         firstname: 'TC', lastname: 'R01', totalprice: 100, depositpaid: true,
@@ -339,11 +376,14 @@ test.describe('TC — R: Responsividade / SLA', () => {
         additionalneeds: 'None',
       },
     });
-    expect(Date.now() - start).toBeLessThan(500);
+    const elapsed = Date.now() - start;
+    createdIds.push((await res.json()).bookingid);
+    expect(elapsed).toBeLessThan(500);
   });
 
   test('TC-R02 — GET /booking/:id deve responder em menos de 500ms', async ({ request }) => {
     const bookingId = await createBooking(request);
+    createdIds.push(bookingId);
     const start = Date.now();
     await request.get(`${API_URL}/booking/${bookingId}`, {
       headers: { Accept: 'application/json' },
@@ -354,6 +394,7 @@ test.describe('TC — R: Responsividade / SLA', () => {
   test('TC-R03 — PUT /booking/:id deve responder em menos de 500ms', async ({ request }) => {
     const token     = await getToken(request);
     const bookingId = await createBooking(request);
+    createdIds.push(bookingId);
     const start = Date.now();
     await request.put(`${API_URL}/booking/${bookingId}`, {
       headers: { 'Content-Type': 'application/json', Accept: 'application/json', Cookie: `token=${token}` },
