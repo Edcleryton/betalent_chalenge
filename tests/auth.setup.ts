@@ -5,7 +5,7 @@ const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
 setup('authenticate', async ({ page }) => {
   await page.goto(process.env.UI_URL as string);
-  await page.getByTestId('username').fill('standard_user');
+  await page.getByTestId('username').fill(process.env.STANDARD_USER as string);
   await page.getByTestId('password').fill(process.env.UI_PASSWORD as string);
   await page.getByTestId('login-button').click();
   

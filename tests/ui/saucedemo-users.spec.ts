@@ -5,8 +5,12 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { CartPage } from './pages/CartPage';
 
 const SLOW        = 15000;
-const UI_URL      = process.env.UI_URL as string;
-const UI_PASSWORD = process.env.UI_PASSWORD as string;
+const UI_URL                  = process.env.UI_URL as string;
+const UI_PASSWORD             = process.env.UI_PASSWORD as string;
+const PROBLEM_USER            = process.env.PROBLEM_USER as string;
+const PERFORMANCE_GLITCH_USER = process.env.PERFORMANCE_GLITCH_USER as string;
+const ERROR_USER              = process.env.ERROR_USER as string;
+const VISUAL_USER             = process.env.VISUAL_USER as string;
 
 test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
@@ -14,7 +18,7 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('problem_user', UI_PASSWORD);
+    await loginPage.login(PROBLEM_USER, UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
   });
 
@@ -164,7 +168,7 @@ test.describe('Sauce Demo - performance_glitch_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('performance_glitch_user', UI_PASSWORD);
+    await loginPage.login(PERFORMANCE_GLITCH_USER, UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/, { timeout: SLOW });
   });
 
@@ -248,7 +252,7 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('error_user', UI_PASSWORD);
+    await loginPage.login(ERROR_USER, UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
   });
 
@@ -342,7 +346,7 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('visual_user', UI_PASSWORD);
+    await loginPage.login(VISUAL_USER, UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
   });
 

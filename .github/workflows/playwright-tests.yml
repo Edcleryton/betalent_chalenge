@@ -19,6 +19,12 @@ jobs:
       API_USER: ${{ secrets.API_USER }}
       API_PASSWORD: ${{ secrets.API_PASSWORD }}
       UI_PASSWORD: ${{ secrets.UI_PASSWORD }}
+      STANDARD_USER: ${{ secrets.STANDARD_USER }}
+      LOCKED_OUT_USER: ${{ secrets.LOCKED_OUT_USER }}
+      PROBLEM_USER: ${{ secrets.PROBLEM_USER }}
+      PERFORMANCE_GLITCH_USER: ${{ secrets.PERFORMANCE_GLITCH_USER }}
+      ERROR_USER: ${{ secrets.ERROR_USER }}
+      VISUAL_USER: ${{ secrets.VISUAL_USER }}
 
     steps:
       - name: Checkout repository

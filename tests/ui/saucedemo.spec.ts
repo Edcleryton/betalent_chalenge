@@ -5,8 +5,14 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { CartPage } from './pages/CartPage';
 import AxeBuilder from '@axe-core/playwright';
 
-const UI_URL      = process.env.UI_URL as string;
-const UI_PASSWORD = process.env.UI_PASSWORD as string;
+const UI_URL                  = process.env.UI_URL as string;
+const UI_PASSWORD             = process.env.UI_PASSWORD as string;
+const STANDARD_USER           = process.env.STANDARD_USER as string;
+const LOCKED_OUT_USER         = process.env.LOCKED_OUT_USER as string;
+const PROBLEM_USER            = process.env.PROBLEM_USER as string;
+const PERFORMANCE_GLITCH_USER = process.env.PERFORMANCE_GLITCH_USER as string;
+const ERROR_USER              = process.env.ERROR_USER as string;
+const VISUAL_USER             = process.env.VISUAL_USER as string;
 
 test.describe('Sauce Demo - Login Tests', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
@@ -19,29 +25,29 @@ test.describe('Sauce Demo - Login Tests', () => {
   });
 
   test('UI-01: should login with standard_user', async ({ page }) => {
-    await loginPage.login('standard_user', UI_PASSWORD);
+    await loginPage.login(STANDARD_USER, UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
   });
 
   test('UI-02: should show error for locked_out_user', async () => {
-    await loginPage.login('locked_out_user', UI_PASSWORD);
+    await loginPage.login(LOCKED_OUT_USER, UI_PASSWORD);
     await expect(loginPage.errorMessage).toBeVisible();
     await expect(loginPage.errorMessage).toContainText('Sorry, this user has been locked out.');
   });
 
   test('UI-09: should login with problem_user and reach inventory', async ({ page }) => {
-    await loginPage.login('problem_user', UI_PASSWORD);
+    await loginPage.login(PROBLEM_USER, UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
   });
 
   test('UI-10: should login with performance_glitch_user (slow login)', async ({ page }) => {
-    await loginPage.login('performance_glitch_user', UI_PASSWORD);
+    await loginPage.login(PERFORMANCE_GLITCH_USER, UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/, { timeout: 15000 });
   });
 
   test('UI-12: error_user - login succeeds but cart interactions produce errors', async ({ page }) => {
     const productsPage = new ProductsPage(page);
-    await loginPage.login('error_user', UI_PASSWORD);
+    await loginPage.login(ERROR_USER, UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
 
     await productsPage.addItemToCart(0);
@@ -52,7 +58,7 @@ test.describe('Sauce Demo - Login Tests', () => {
   });
 
   test('UI-13: visual_user - login succeeds and inventory loads with visual defects', async ({ page }) => {
-    await loginPage.login('visual_user', UI_PASSWORD);
+    await loginPage.login(VISUAL_USER, UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
 
     const images = page.locator('.inventory_item img');
@@ -166,7 +172,7 @@ test.describe('Sauce Demo - Login Validation', () => {
   });
 
   test('UI-14: should show error for invalid credentials', async () => {
-    await loginPage.login('standard_user', 'wrong_password');
+    await loginPage.login(STANDARD_USER, 'wrong_password');
     await expect(loginPage.errorMessage).toBeVisible();
     await expect(loginPage.errorMessage).toContainText(
       'Username and password do not match any user in this service'
