@@ -226,8 +226,7 @@ test.describe('Sauce Demo - Cart & Checkout Validation', () => {
     await productsPage.cartButton.click();
     await expect(page).toHaveURL(/cart.html/);
 
-    const itemCount = await cartPage.getItemCount();
-    expect(itemCount).toBe(2);
+    await expect(cartPage.cartItems).toHaveCount(2);
 
     const price0 = parseFloat((await cartPage.itemPrice(0).innerText()).replace('$', ''));
     const price1 = parseFloat((await cartPage.itemPrice(1).innerText()).replace('$', ''));
