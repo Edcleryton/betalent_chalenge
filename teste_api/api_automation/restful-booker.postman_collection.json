@@ -18,6 +18,9 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"TC-R04 — responde em menos de 5000ms (SLA)\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -154,6 +157,9 @@
 									"    pm.expect(data.lastname).to.eql(\"Brown\");",
 									"    pm.expect(data.totalprice).to.eql(111);",
 									"    pm.expect(data.depositpaid).to.eql(true);",
+									"});",
+									"pm.test(\"TC-R01 — responde em menos de 500ms (SLA)\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -382,6 +388,9 @@
 									"    pm.expect(data.depositpaid).to.be.a('boolean');",
 									"    pm.expect(data.bookingdates.checkin).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
 									"    pm.expect(data.bookingdates.checkout).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+									"});",
+									"pm.test(\"TC-R02 — responde em menos de 500ms (SLA)\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -457,6 +466,9 @@
 									"});",
 									"pm.test(\"Dados atualizados na resposta\", function () {",
 									"    pm.expect(pm.response.json().firstname).to.eql(\"James\");",
+									"});",
+									"pm.test(\"TC-R03 — responde em menos de 500ms (SLA)\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
 									"});"
 								],
 								"type": "text/javascript"

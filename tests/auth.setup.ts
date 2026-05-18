@@ -4,9 +4,9 @@ import path from 'path';
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
 setup('authenticate', async ({ page }) => {
-  await page.goto(process.env.UI_URL ?? 'https://www.saucedemo.com');
+  await page.goto(process.env.UI_URL as string);
   await page.getByTestId('username').fill('standard_user');
-  await page.getByTestId('password').fill(process.env.UI_PASSWORD ?? 'secret_sauce');
+  await page.getByTestId('password').fill(process.env.UI_PASSWORD as string);
   await page.getByTestId('login-button').click();
   
   await expect(page).toHaveURL(/inventory.html/);

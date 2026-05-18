@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-const API_URL  = process.env.API_URL      || 'https://restful-booker.herokuapp.com';
-const USER     = process.env.API_USER     || 'admin';
-const PASSWORD = process.env.API_PASSWORD || 'password123';
+const API_URL  = process.env.API_URL as string;
+const USER     = process.env.API_USER as string;
+const PASSWORD = process.env.API_PASSWORD as string;
 
 type BookingData = {
   firstname: string; lastname: string; totalprice: number; depositpaid: boolean;
@@ -36,6 +36,18 @@ async function createBooking(
 }
 
 test.describe('Restful-Booker API Testing', () => {
+  const createdIds: number[] = [];
+
+  test.afterEach(async ({ request }) => {
+    if (createdIds.length === 0) return;
+    const token = await getToken(request);
+    for (const id of createdIds) {
+      await request.delete(`${API_URL}/booking/${id}`, {
+        headers: { 'Content-Type': 'application/json', Cookie: `token=${token}` },
+      });
+    }
+    createdIds.length = 0;
+  });
 
   test('should create a new booking (CREATE)', async ({ request }) => {
     const response = await request.post(`${API_URL}/booking`, {
@@ -46,10 +58,12 @@ test.describe('Restful-Booker API Testing', () => {
     const body = await response.json();
     expect(body.bookingid).toBeDefined();
     expect(body.booking.firstname).toBe('Jim');
+    createdIds.push(body.bookingid);
   });
 
   test('should retrieve booking by ID (READ)', async ({ request }) => {
     const bookingId = await createBooking(request);
+    createdIds.push(bookingId);
     const response = await request.get(`${API_URL}/booking/${bookingId}`, {
       headers: { Accept: 'application/json' },
     });
@@ -62,6 +76,7 @@ test.describe('Restful-Booker API Testing', () => {
   test('should update a booking (UPDATE)', async ({ request }) => {
     const token     = await getToken(request);
     const bookingId = await createBooking(request);
+    createdIds.push(bookingId);
     const response  = await request.put(`${API_URL}/booking/${bookingId}`, {
       headers: {
         'Content-Type': 'application/json', Accept: 'application/json',
@@ -100,6 +115,7 @@ test.describe('Restful-Booker API Testing', () => {
 
   test('should fail to update booking without token', async ({ request }) => {
     const bookingId = await createBooking(request);
+    createdIds.push(bookingId);
     const response  = await request.put(`${API_URL}/booking/${bookingId}`, {
       data: { firstname: 'James', lastname: 'Brown' },
     });
@@ -113,6 +129,7 @@ test.describe('Restful-Booker API Testing', () => {
       bookingdates: { checkin: '2026-03-01', checkout: '2026-03-05' },
       additionalneeds: 'None',
     });
+    createdIds.push(bookingId);
     const response = await request.patch(`${API_URL}/booking/${bookingId}`, {
       headers: {
         'Content-Type': 'application/json', Accept: 'application/json',
@@ -133,6 +150,7 @@ test.describe('Restful-Booker API Testing', () => {
       bookingdates: { checkin: '2026-03-01', checkout: '2026-03-05' },
       additionalneeds: 'None',
     });
+    createdIds.push(bookingId);
     const response = await request.get(`${API_URL}/booking`, {
       headers: { Accept: 'application/json' },
       params: { firstname: 'FilterTest', lastname: 'User' },

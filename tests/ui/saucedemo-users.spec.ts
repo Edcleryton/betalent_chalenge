@@ -4,9 +4,9 @@ import { ProductsPage } from './pages/ProductsPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { CartPage } from './pages/CartPage';
 
-const SLOW = 15000;
-
-// ─── problem_user ─────────────────────────────────────────────────────────────
+const SLOW        = 15000;
+const UI_URL      = process.env.UI_URL as string;
+const UI_PASSWORD = process.env.UI_PASSWORD as string;
 
 test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
@@ -14,8 +14,12 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('problem_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('problem_user', UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
+  });
+
+  test.afterEach(async ({ page }) => {
+    await page.goto(`${UI_URL}/inventory.html`);
   });
 
   test('PU-01: product images are all identical (visual bug)', async ({ page }) => {
@@ -154,16 +158,18 @@ test.describe('Sauce Demo - problem_user Authenticated Flow', () => {
   });
 });
 
-// ─── performance_glitch_user ──────────────────────────────────────────────────
-
 test.describe('Sauce Demo - performance_glitch_user Authenticated Flow', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('performance_glitch_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('performance_glitch_user', UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/, { timeout: SLOW });
+  });
+
+  test.afterEach(async ({ page }) => {
+    await page.goto(`${UI_URL}/inventory.html`);
   });
 
   test('PGU-01: should sort products despite slow performance', async ({ page }) => {
@@ -196,7 +202,7 @@ test.describe('Sauce Demo - performance_glitch_user Authenticated Flow', () => {
   test('PGU-04: should logout successfully despite slow performance', async ({ page }) => {
     const productsPage = new ProductsPage(page);
     await productsPage.logout();
-    await expect(page).toHaveURL('https://www.saucedemo.com/', { timeout: SLOW });
+    await expect(page).toHaveURL(`${UI_URL}/`, { timeout: SLOW });
   });
 
   test('PGU-05: product detail navigation works despite slow performance', async ({ page }) => {
@@ -221,7 +227,6 @@ test.describe('Sauce Demo - performance_glitch_user Authenticated Flow', () => {
     await productsPage.cartButton.click();
     await expect(page).toHaveURL(/cart.html/, { timeout: SLOW });
 
-    // Use CSS selector — data-test="cart-item" may render late for performance_glitch_user
     await page.waitForSelector('.cart_item', { timeout: SLOW * 2 });
     const priceLocators = page.locator('.cart_item .inventory_item_price');
     const price0 = parseFloat((await priceLocators.nth(0).innerText({ timeout: SLOW })).replace('$', ''));
@@ -237,16 +242,18 @@ test.describe('Sauce Demo - performance_glitch_user Authenticated Flow', () => {
   });
 });
 
-// ─── error_user ───────────────────────────────────────────────────────────────
-
 test.describe('Sauce Demo - error_user Authenticated Flow', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('error_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('error_user', UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
+  });
+
+  test.afterEach(async ({ page }) => {
+    await page.goto(`${UI_URL}/inventory.html`);
   });
 
   test('EU-01: add to cart produces error or badge does not update', async ({ page }) => {
@@ -329,16 +336,18 @@ test.describe('Sauce Demo - error_user Authenticated Flow', () => {
   });
 });
 
-// ─── visual_user ──────────────────────────────────────────────────────────────
-
 test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
-    await loginPage.login('visual_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('visual_user', UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
+  });
+
+  test.afterEach(async ({ page }) => {
+    await page.goto(`${UI_URL}/inventory.html`);
   });
 
   test('VU-01: product images are repeated across inventory (visual bug)', async ({ page }) => {
@@ -385,7 +394,6 @@ test.describe('Sauce Demo - visual_user Authenticated Flow', () => {
     const inventorySrc = await page.locator('.inventory_item img').first().getAttribute('src');
     await page.locator('.inventory_item_name').first().click();
     await expect(page).toHaveURL(/inventory-item.html/);
-    // Sauce Demo detail page uses .inventory_details_img (no data-test attribute)
     const detailImg = page.locator('.inventory_details_img');
     await expect(detailImg).toBeVisible();
     const detailSrc = await detailImg.getAttribute('src');

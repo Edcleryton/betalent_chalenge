@@ -300,7 +300,7 @@ O que cada comando executa por baixo:
 | `npm test` | `newman run ... --reporters cli,htmlextra --reporter-htmlextra-export reports/report.html` |
 | `npm run test:cli` | `newman run ... --reporters cli` |
 
-Após `npm test`, abra `teste_api/reports/report.html` no browser para ver o relatório visual completo com todas as 53 asserções, tempo de resposta e detalhes de cada request.
+Após `npm test`, abra `teste_api/reports/report.html` no browser para ver o relatório visual completo com todas as 56 asserções (incluindo TC-R01~04 de SLA), tempo de resposta e detalhes de cada request.
 
 ---
 
@@ -346,8 +346,8 @@ betalent_chalenge/
 ├── tests/
 │   ├── auth.setup.ts                       # Setup de autenticação (storageState)
 │   ├── api/
-│   │   ├── booking.spec.ts                 # 11 testes de API (Playwright)
-│   │   └── booking_vader.spec.ts           # 37 casos de teste VADER — D, A, V, E, R
+│   │   ├── booking.spec.ts                 # 10 testes de API (Playwright)
+│   │   └── booking_vader.spec.ts           # 37 casos de teste VADER — V, A, D, E, R
 │   └── ui/
 │       ├── saucedemo.spec.ts               # 21 testes principais de UI
 │       ├── saucedemo-users.spec.ts         # 27 testes por tipo de usuário
@@ -394,10 +394,10 @@ betalent_chalenge/
 
 | Suite | Testes | Cobertura |
 |---|---|---|
-| Playwright (`booking.spec.ts`) | 11 | CRUD, PATCH, filtros, 404, health check, segurança |
+| Playwright (`booking.spec.ts`) | 10 | CRUD, PATCH, filtros, 404, health check, segurança |
 | Playwright VADER (`booking_vader.spec.ts`) | 37 | Dados, Autorização, Verbos HTTP, Erros, Responsividade |
-| Postman/Newman | 27 requests / 53 asserções | CRUD + contrato + segurança + performance |
-| **Total Playwright API** | **48** | |
+| Postman/Newman | 27 requests / 56 asserções | CRUD + contrato + segurança + SLA (TC-R01~04) |
+| **Total Playwright API** | **47** | |
 
 ---
 

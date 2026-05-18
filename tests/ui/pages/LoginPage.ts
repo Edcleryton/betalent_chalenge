@@ -9,7 +9,7 @@ export class LoginPage {
   readonly errorMessage = this.page.getByTestId('error');
 
   async navigate() {
-    await this.page.goto(process.env.UI_URL ?? 'https://www.saucedemo.com');
+    await this.page.goto(process.env.UI_URL as string);
   }
 
   async login(username: string, password: string) {

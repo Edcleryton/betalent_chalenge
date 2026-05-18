@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-const API_URL  = process.env.API_URL      || 'https://restful-booker.herokuapp.com';
-const USER     = process.env.API_USER     || 'admin';
-const PASSWORD = process.env.API_PASSWORD || 'password123';
+const API_URL  = process.env.API_URL as string;
+const USER     = process.env.API_USER as string;
+const PASSWORD = process.env.API_PASSWORD as string;
 
 async function getToken(request: Parameters<Parameters<typeof test>[1]>[0]['request']): Promise<string> {
   const res = await request.post(`${API_URL}/auth`, {
@@ -214,7 +214,7 @@ test.describe('TC — D: Validação de Dados', () => {
       headers: { Accept: 'application/json' },
       params: { checkin: 'abc' },
     });
-    expect(response.status()).toBe(500);
+    expect(response.status()).not.toBe(500);
   });
 
 });
@@ -304,7 +304,7 @@ test.describe('TC — V: Verbos HTTP', () => {
 
   test('TC-V02-REG — GET /ping retorna 201 em vez de 200 (BUG-V01)', async ({ request }) => {
     const response = await request.get(`${API_URL}/ping`);
-    expect(response.status()).toBe(201);
+    expect(response.status()).toBe(200);
   });
 
   test('TC-V03 — DELETE /booking/:id deve retornar 204 (No Content)', async ({ request }) => {
@@ -322,7 +322,7 @@ test.describe('TC — V: Verbos HTTP', () => {
     const response  = await request.delete(`${API_URL}/booking/${bookingId}`, {
       headers: { 'Content-Type': 'application/json', Cookie: `token=${token}` },
     });
-    expect(response.status()).toBe(201);
+    expect(response.status()).toBe(204);
   });
 
 });

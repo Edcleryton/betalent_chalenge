@@ -19,6 +19,9 @@ playwright-report/
 teste_api/reports/
 teste_api/scripts/
 
+# ── Scripts pessoais (não versionados) ───────────────────────────────────────
+scripts/gerar_entrevista_pdf.py
+
 # ── Sistema operacional ───────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db

@@ -5,6 +5,9 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { CartPage } from './pages/CartPage';
 import AxeBuilder from '@axe-core/playwright';
 
+const UI_URL      = process.env.UI_URL as string;
+const UI_PASSWORD = process.env.UI_PASSWORD as string;
+
 test.describe('Sauce Demo - Login Tests', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
@@ -16,29 +19,29 @@ test.describe('Sauce Demo - Login Tests', () => {
   });
 
   test('UI-01: should login with standard_user', async ({ page }) => {
-    await loginPage.login('standard_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('standard_user', UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
   });
 
   test('UI-02: should show error for locked_out_user', async () => {
-    await loginPage.login('locked_out_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('locked_out_user', UI_PASSWORD);
     await expect(loginPage.errorMessage).toBeVisible();
     await expect(loginPage.errorMessage).toContainText('Sorry, this user has been locked out.');
   });
 
   test('UI-09: should login with problem_user and reach inventory', async ({ page }) => {
-    await loginPage.login('problem_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('problem_user', UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
   });
 
   test('UI-10: should login with performance_glitch_user (slow login)', async ({ page }) => {
-    await loginPage.login('performance_glitch_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('performance_glitch_user', UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/, { timeout: 15000 });
   });
 
   test('UI-12: error_user - login succeeds but cart interactions produce errors', async ({ page }) => {
     const productsPage = new ProductsPage(page);
-    await loginPage.login('error_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('error_user', UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
 
     await productsPage.addItemToCart(0);
@@ -49,7 +52,7 @@ test.describe('Sauce Demo - Login Tests', () => {
   });
 
   test('UI-13: visual_user - login succeeds and inventory loads with visual defects', async ({ page }) => {
-    await loginPage.login('visual_user', process.env.UI_PASSWORD ?? 'secret_sauce');
+    await loginPage.login('visual_user', UI_PASSWORD);
     await expect(page).toHaveURL(/inventory.html/);
 
     const images = page.locator('.inventory_item img');
@@ -71,7 +74,11 @@ test.describe('Sauce Demo - Authenticated Flow', () => {
   test.beforeEach(async ({ page }) => {
     productsPage = new ProductsPage(page);
     checkoutPage = new CheckoutPage(page);
-    await page.goto(`${process.env.UI_URL ?? 'https://www.saucedemo.com'}/inventory.html`);
+    await page.goto(`${UI_URL}/inventory.html`);
+  });
+
+  test.afterEach(async ({ page }) => {
+    await page.goto(`${UI_URL}/inventory.html`);
   });
 
   test('UI-03a: should sort products by price (low to high)', async () => {
@@ -124,29 +131,24 @@ test.describe('Sauce Demo - Authenticated Flow', () => {
 
   test('UI-06: should logout successfully', async ({ page }) => {
     await productsPage.logout();
-    await expect(page).toHaveURL('https://www.saucedemo.com/');
+    await expect(page).toHaveURL(`${UI_URL}/`);
   });
 
   test('UI-11: should navigate between key pages', async ({ page }) => {
-    // Inventory → Product detail
     await page.locator('.inventory_item_name').first().click();
     await expect(page).toHaveURL(/inventory-item.html/);
 
-    // Product detail → Back to inventory
     await page.getByTestId('back-to-products').click();
     await expect(page).toHaveURL(/inventory.html/);
 
-    // Inventory → Cart
     await productsPage.addItemToCart(0);
     await productsPage.cartButton.click();
     await expect(page).toHaveURL(/cart.html/);
 
-    // Cart → Continue shopping (back to inventory)
     await page.getByTestId('continue-shopping').click();
     await expect(page).toHaveURL(/inventory.html/);
   });
 
-  // Nível 2 — Acessibilidade
   test('UI-07/08: should check for accessibility violations on inventory page', async ({ page }) => {
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations, `UI-07/08: ${results.violations.length} accessibility violation(s) on inventory page`).toEqual([]);
@@ -192,7 +194,11 @@ test.describe('Sauce Demo - Cart & Checkout Validation', () => {
     productsPage = new ProductsPage(page);
     cartPage     = new CartPage(page);
     checkoutPage = new CheckoutPage(page);
-    await page.goto(`${process.env.UI_URL ?? 'https://www.saucedemo.com'}/inventory.html`);
+    await page.goto(`${UI_URL}/inventory.html`);
+  });
+
+  test.afterEach(async ({ page }) => {
+    await page.goto(`${UI_URL}/inventory.html`);
   });
 
   test('UI-16: should show validation error on checkout with empty fields', async ({ page }) => {
