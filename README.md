@@ -136,12 +136,25 @@ Saída esperada: `Version 1.44.x` (ou superior).
 Na raiz do projeto, crie o arquivo `.env` com o conteúdo abaixo:
 
 ```env
+# Restful-Booker API
 API_URL=https://restful-booker.herokuapp.com
 API_USER=admin
 API_PASSWORD=password123
+
+# Sauce Demo UI
+UI_URL=https://www.saucedemo.com
+UI_PASSWORD=secret_sauce
+
+# Sauce Demo — usuários de teste
+STANDARD_USER=standard_user
+LOCKED_OUT_USER=locked_out_user
+PROBLEM_USER=problem_user
+PERFORMANCE_GLITCH_USER=performance_glitch_user
+ERROR_USER=error_user
+VISUAL_USER=visual_user
 ```
 
-> As credenciais acima são públicas e fazem parte da documentação oficial do Restful-Booker. O arquivo `.env` não é versionado (está no `.gitignore`).
+> Todos os valores acima são públicos (API de sandbox) ou constam na documentação oficial do SauceDemo. O arquivo `.env` não é versionado (está no `.gitignore`). Alternativamente, copie `.env.example` para `.env` — todos os valores já estão preenchidos.
 
 ---
 
@@ -219,7 +232,14 @@ cd ..
 | `API_URL` | `https://restful-booker.herokuapp.com` | Playwright API tests |
 | `API_USER` | `admin` | Geração de token |
 | `API_PASSWORD` | `password123` | Geração de token |
+| `UI_URL` | `https://www.saucedemo.com` | Testes de UI — Sauce Demo |
 | `UI_PASSWORD` | `secret_sauce` | Testes de UI — Sauce Demo |
+| `STANDARD_USER` | `standard_user` | Login happy path |
+| `LOCKED_OUT_USER` | `locked_out_user` | Login bloqueado |
+| `PROBLEM_USER` | `problem_user` | Testes de bugs funcionais |
+| `PERFORMANCE_GLITCH_USER` | `performance_glitch_user` | Testes de performance |
+| `ERROR_USER` | `error_user` | Testes de usuário com erros |
+| `VISUAL_USER` | `visual_user` | Testes de defeitos visuais |
 
 > Copie `.env.example` para `.env` — todos os valores padrão já estão preenchidos e prontos para uso local.
 
@@ -423,7 +443,7 @@ betalent_chalenge/
 | `problem_user` | 8 | Sort funciona apenas em A→Z; imagens todas idênticas |
 | `error_user` | 6 | **Checkout não conclui mesmo com dados válidos** |
 | `visual_user` | 7 | Imagens 404 em todas as páginas e ordenações |
-| `performance_glitch_user` | 0 | Apenas lentidão (comportamento esperado) |
+| `performance_glitch_user` | 1 | Login excede threshold de 3000ms no CI — documentado como `[BUG-PGU]`, causa falha em todos os 6 testes da persona |
 
 > Detalhamento completo em [`docs/UI_TEST_PLAN.md`](./docs/UI_TEST_PLAN.md) seção 5b e [`docs/API_TEST_PLAN.md`](./docs/API_TEST_PLAN.md) seção 6.
 

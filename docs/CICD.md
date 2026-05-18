@@ -32,6 +32,13 @@ URL direta: `https://github.com/seu-usuário/betalent_chalenge/settings/secrets/
 | `UI_URL` | `https://www.saucedemo.com` | playwright-tests |
 | `API_USER` | `admin` | playwright-tests |
 | `API_PASSWORD` | `password123` | playwright-tests |
+| `UI_PASSWORD` | `secret_sauce` | playwright-tests |
+| `STANDARD_USER` | `standard_user` | playwright-tests |
+| `LOCKED_OUT_USER` | `locked_out_user` | playwright-tests |
+| `PROBLEM_USER` | `problem_user` | playwright-tests |
+| `PERFORMANCE_GLITCH_USER` | `performance_glitch_user` | playwright-tests |
+| `ERROR_USER` | `error_user` | playwright-tests |
+| `VISUAL_USER` | `visual_user` | playwright-tests |
 
 > Os valores de `API_URL`, `API_USER` e `API_PASSWORD` são públicos (API de sandbox). Em projetos com dados sensíveis, nunca exponha credenciais reais nesses campos.
 

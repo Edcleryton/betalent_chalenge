@@ -106,12 +106,12 @@ O SauceDemo disponibiliza 6 personas de teste, cada uma simulando uma classe dif
 | PU-06 | `problem_user` | Página de detalhe exibe imagem de produto errada | FAIL | BUG-PU-06 |
 | PU-07 | `problem_user` | Múltiplos índices de add-to-cart falham (além do índice 2) | FAIL | BUG-PU-07 |
 | PU-08 | `problem_user` | Erros de console gerados durante interações com bug | FAIL | BUG-PU-08 |
-| PGU-01 | `performance_glitch_user` | Sort funciona com timeout 15s | PASS | — |
-| PGU-02 | `performance_glitch_user` | Add to cart funciona com timeout 15s | PASS | — |
-| PGU-03 | `performance_glitch_user` | Checkout completo com timeouts 15s | PASS | — |
-| PGU-04 | `performance_glitch_user` | Logout funciona com timeout 15s | PASS | — |
-| PGU-05 | `performance_glitch_user` | Navegação para detalhe e retorno funciona (lento) | PASS | — |
-| PGU-06 | `performance_glitch_user` | Carrinho multi-item e subtotal correto (lento) | PASS | — |
+| PGU-01 | `performance_glitch_user` | Sort funciona com timeout 15s | FAIL | BUG-PGU |
+| PGU-02 | `performance_glitch_user` | Add to cart funciona com timeout 15s | FAIL | BUG-PGU |
+| PGU-03 | `performance_glitch_user` | Checkout completo com timeouts 15s | FAIL | BUG-PGU |
+| PGU-04 | `performance_glitch_user` | Logout funciona com timeout 15s | FAIL | BUG-PGU |
+| PGU-05 | `performance_glitch_user` | Navegação para detalhe e retorno funciona (lento) | FAIL | BUG-PGU |
+| PGU-06 | `performance_glitch_user` | Carrinho multi-item e subtotal correto (lento) | FAIL | BUG-PGU |
 | EU-01 | `error_user` | Add to cart: badge não atualiza (erro confirmado) | FAIL | BUG-EU-01 |
 | EU-02 | `error_user` | Checkout valida só 1 campo por vez | FAIL | BUG-EU-02 |
 | EU-03 | `error_user` | CEP inválido gera falha silenciosa (sem erro) | FAIL | BUG-EU-03 |

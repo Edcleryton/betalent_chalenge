@@ -60,6 +60,8 @@ Permite responder: "qual teste cobre qual bug?" e "qual feature tem mais problem
 | Status codes (respostas de sucesso) | 2 | `DELETE` retorna 201 em vez de 204; `GET /ping` retorna 201 em vez de 200 |
 | Tratamento de erros | 1 | `POST` com campo faltando retorna 500 em vez de 400 |
 | Autenticação | 1 | Credenciais inválidas retornam 200 em vez de 401 |
+| Validação de entrada | 3 | `totalprice: -1` e datas invertidas aceitos sem validação; data inválida em query param causa 500 em vez de 400 |
+| Formato de erros | 1 | Respostas 4xx/5xx retornam `text/plain` em vez de `application/json` |
 
 ---
 
@@ -71,6 +73,10 @@ Permite responder: "qual teste cobre qual bug?" e "qual feature tem mais problem
 | API-06 | BUG-004 | `POST` com campo ausente retorna `500` em vez de `400 Bad Request` | Error Handling | Alta |
 | API-01 (credenciais inválidas) | BUG-003 | `POST /auth` inválido retorna `200 OK` em vez de `401 Unauthorized` | Authentication | Média |
 | API-11 | BUG-005 | `GET /ping` retorna `201 Created` em vez de `200 OK` | Status Codes | Baixa |
+| TC-D05 | BUG-006 | `GET /booking?checkin=abc` retorna `500` em vez de `400 Bad Request` | Input Validation | Alta |
+| TC-D01 | BUG-007 | `POST /booking` com `totalprice: -1` aceito sem validação | Input Validation | Média |
+| TC-D04 | BUG-008 | `POST /booking` com datas invertidas (checkin > checkout) aceito sem validação | Input Validation | Média |
+| TC-E01/02/03 | BUG-009 | Respostas de erro 4xx/5xx retornam `text/plain` em vez de `application/json` | Error Format | Baixa |
 
 > Análise VADER completa (por dimensão: Verbs, Authorization, Data, Errors, Responsiveness): `teste_api/docs/vader-analysis.md`
 
