@@ -4,7 +4,7 @@ export class CartPage {
   constructor(private readonly page: Page) {}
 
   readonly cartList               = this.page.getByTestId('cart-list');
-  readonly cartItems              = this.page.getByTestId('cart-item');
+  readonly cartItems              = this.page.locator('.cart_item');
   readonly continueShoppingButton = this.page.getByTestId('continue-shopping');
   readonly checkoutButton         = this.page.getByTestId('checkout');
 
