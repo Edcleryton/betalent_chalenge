@@ -48,11 +48,50 @@ Não é duplicação — são ferramentas para públicos diferentes:
 
 **Newman + CI/CD:** Pipeline GitHub Actions roda `npm test` na pasta `teste_api/` automaticamente em cada push, gerado relatório HTML e enviando PDF por email. Decisão: relatório por email com PDF foi adotado porque artifacts do GitHub Actions exigem autenticação para download — o PDF chega diretamente na caixa de entrada.
 
+### 2.5 Critérios de Entrada e Saída (ISO/IEC/IEEE 29119-3)
+
+**Critérios de Entrada — condições para iniciar a suíte:**
+
+| Critério | Como verificar |
+|---|---|
+| Arquivo `.env` presente e preenchido | `cat .env` — `API_URL`, `API_USER`, `API_PASSWORD` definidos |
+| Restful-Booker acessível | `curl https://restful-booker.herokuapp.com/ping` retorna status `201` |
+| Playwright instalado | `npx playwright --version` retorna ≥ 1.44.0 |
+| Newman instalado (suíte Postman) | `newman --version` retorna ≥ 6.1.2 |
+
+**Critérios de Saída — condições para encerrar o ciclo:**
+
+| Critério | Condição |
+|---|---|
+| Cobertura completa | Todos os 11 casos CRUD + 37 casos VADER executados sem `SKIP` não planejado |
+| Incidentes registrados | Todos os `FAIL` possuem Bug ID com severidade, esperado × observado e rastreabilidade em `traceability.md` |
+| Relatório disponível | `playwright-report/index.html` e/ou `teste_api/reports/report.html` gerados |
+
+**Critérios de Suspensão e Retomada:**
+
+| Condição de Suspensão | Critério de Retomada |
+|---|---|
+| Restful-Booker indisponível (heroku sleep ou outage) | Serviço restaurado + `GET /ping` retornando resposta (status qualquer) |
+| Token de autenticação não obtido em API-01 | Credenciais corrigidas no `.env` + API-01 executado com sucesso |
+| Ambiente de CI sem acesso à internet | Acesso restaurado + pipeline re-triggerado |
+
 ---
 
 ## 3. Ferramentas de Automação
 -   **Playwright APIRequestContext:** Utilizado para a automação principal integrada à suíte de testes.
 -   **Postman Collection:** Disponível em `teste_api/api_automation/restful-booker.postman_collection.json` para consulta manual e conformidade com os requisitos.
+
+### 3.1 Requisitos de Ambiente de Teste (ISO/IEC/IEEE 29119-3)
+
+| Componente | Requisito |
+|---|---|
+| **Sistema Operacional** | Windows 10+, macOS 12+, Ubuntu 22.04+ (CI: ubuntu-latest via GitHub Actions) |
+| **Node.js** | 20.x LTS ou superior (verificar com `node --version`) |
+| **npm** | 10.x incluído com Node.js |
+| **Playwright** | ≥ 1.44.0 — instalar com `npm install` na raiz |
+| **Newman** | ≥ 6.1.2 — instalar com `npm install` em `teste_api/` |
+| **Rede** | Acesso à internet para `https://restful-booker.herokuapp.com` |
+| **Variáveis de Ambiente** | `API_URL`, `API_USER`, `API_PASSWORD` (via `.env` na raiz) |
 
 ## 3. Cenários de Teste
 
@@ -65,23 +104,28 @@ Os testes afirmam o comportamento correto segundo a especificação REST (RFC 72
 | `PASS` | Comportamento conforme o esperado |
 | `FAIL` | Comportamento diverge do esperado — Bug ID na coluna correspondente |
 
-| ID | Cenário | Método | Comportamento Esperado | Status | Bug ID |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| API-01 | Geração de Token de Autenticação | POST | 200 + token string | PASS | — |
-| API-02 | Criação de nova reserva | POST | 200 + bookingid + dados confirmados | PASS | — |
-| API-03 | Consulta de reserva por ID | GET | 200 + schema completo | PASS | — |
-| API-04 | Atualização completa de reserva | PUT | 200 + dados atualizados | PASS | — |
-| API-05 | Exclusão de reserva | DELETE | 204 No Content | FAIL | BUG-001 |
-| API-06 | Tentativa de reserva com campos faltando | POST | 400 Bad Request | FAIL | BUG-004 |
-| API-07 | Tentativa de atualização sem Token | PUT | 403 Forbidden | PASS | — |
-| API-08 | Atualização parcial de reserva (PATCH) | PATCH | 200 — campos não enviados permanecem intactos | PASS | — |
-| API-09 | Filtro de reservas por nome (GET com query params) | GET | 200 + array com bookingid | PASS | — |
-| API-10 | Consulta de ID inexistente | GET | 404 Not Found | PASS | — |
-| API-11 | Health check do serviço (/ping) | GET | 200 OK | FAIL | BUG-005 |
+| ID | Cenário | Método | Comportamento Esperado | Status | Bug ID | Pré-condição | Pós-condição |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| API-01 | Geração de Token de Autenticação | POST | 200 + token string | PASS | — | `API_URL`, `API_USER`, `API_PASSWORD` configurados | Token válido armazenado para testes subsequentes |
+| API-02 | Criação de nova reserva | POST | 200 + bookingid + dados confirmados | PASS | — | Token válido obtido em API-01 | `booking_id` criado e armazenado |
+| API-03 | Consulta de reserva por ID | GET | 200 + schema completo | PASS | — | `booking_id` criado em API-02 | Dados do booking validados contra schema |
+| API-04 | Atualização completa de reserva | PUT | 200 + dados atualizados | PASS | — | `booking_id` criado; token válido | Todos os campos do booking substituídos |
+| API-05 | Exclusão de reserva | DELETE | 204 No Content | FAIL | BUG-001 | `booking_id` criado; token válido | Bug 201 documentado; booking excluído da API |
+| API-06 | Tentativa de reserva com campos faltando | POST | 400 Bad Request | FAIL | BUG-004 | API acessível; body de requisição incompleto preparado | Bug 500 documentado; nenhum booking criado |
+| API-07 | Tentativa de atualização sem Token | PUT | 403 Forbidden | PASS | — | `booking_id` existente; ausência de token confirmada | Acesso bloqueado com 403 |
+| API-08 | Atualização parcial de reserva (PATCH) | PATCH | 200 — campos não enviados permanecem intactos | PASS | — | `booking_id` criado; token válido; somente campos a alterar no body | Campos enviados atualizados; campos omitidos preservados |
+| API-09 | Filtro de reservas por nome (GET com query params) | GET | 200 + array com bookingid | PASS | — | Booking com `firstname`/`lastname` conhecidos criado em API-02 | Array de `bookingid` retornado contendo o ID criado |
+| API-10 | Consulta de ID inexistente | GET | 404 Not Found | PASS | — | ID de alto valor sem booking (ex: 999999) | 404 retornado sem erro de servidor |
+| API-11 | Health check do serviço (/ping) | GET | 200 OK | FAIL | BUG-005 | API acessível | Bug 201 documentado |
 
 ## 3.1 Casos de Teste VADER (`booking_vader.spec.ts`)
 
 37 casos organizados em 5 dimensões heurísticas. Prefixo **TC-\*** afirma o comportamento correto por RFC (falha = bug ativo). Sufixo **TC-\*-REG** documenta o comportamento atual com bug (passa = bug presente, alerta quando corrigido).
+
+> **Pré-condição comum — dimensões D e V:** API acessível; token válido obtido previamente.
+> **Pré-condição comum — dimensão A:** API acessível; cenários de credenciais inválidas ou ausência de token preparados.
+> **Pré-condição comum — dimensão E:** Requisição que gera resposta de erro (4xx/5xx) preparada.
+> **Pré-condição comum — dimensão R:** API acessível; tempo de início registrado antes da requisição.
 
 ### D — Validação de Dados
 
@@ -163,16 +207,16 @@ Utilizadas via arquivo `.env`:
 
 ## 6. Bugs Confirmados
 
-| ID | Endpoint | Observado | Esperado (RFC 7231) | Severidade |
-| :--- | :--- | :--- | :--- | :--- |
-| BUG-001 | `DELETE /booking/:id` | 201 Created | 204 No Content | Baixa |
-| BUG-003 | `POST /auth` (credenciais inválidas) | 200 OK + body de erro | 401 Unauthorized | Média |
-| BUG-004 | `POST /booking` (campo ausente) | 500 Internal Server Error | 400 Bad Request | Alta |
-| BUG-005 | `GET /ping` | 201 Created | 200 OK | Baixa |
-| BUG-006 | `GET /booking?checkin=abc` | 500 Internal Server Error | 400 Bad Request | Alta |
-| BUG-007 | `POST /booking` (`totalprice: -1`) | 200 OK — aceito sem validação | 400 Bad Request | Média |
-| BUG-008 | `POST /booking` (datas invertidas) | 200 OK — aceito sem validação | 400 Bad Request | Média |
-| BUG-009 | Respostas de erro 4xx/5xx | `text/plain` | `application/json` | Baixa |
+| ID | Endpoint | Observado | Esperado (RFC 7231) | Severidade | Status | Passos para Reproduzir |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| BUG-001 | `DELETE /booking/:id` | 201 Created | 204 No Content | Baixa | Aberto | Autenticar → criar booking → `DELETE /booking/:id` com token → verificar status code da resposta |
+| BUG-003 | `POST /auth` (credenciais inválidas) | 200 OK + body de erro | 401 Unauthorized | Média | Aberto | `POST /auth` com username/password inválidos → verificar status code e body da resposta |
+| BUG-004 | `POST /booking` (campo ausente) | 500 Internal Server Error | 400 Bad Request | Alta | Aberto | `POST /booking` com body omitindo campo obrigatório (ex: `totalprice`) → verificar status code retornado |
+| BUG-005 | `GET /ping` | 201 Created | 200 OK | Baixa | Aberto | `GET /ping` → verificar status code da resposta (esperado 200, observado 201) |
+| BUG-006 | `GET /booking?checkin=abc` | 500 Internal Server Error | 400 Bad Request | Alta | Aberto | `GET /booking?checkin=abc` com query param inválido → verificar se API retorna 400 ou 500 |
+| BUG-007 | `POST /booking` (`totalprice: -1`) | 200 OK — aceito sem validação | 400 Bad Request | Média | Aberto | `POST /booking` com `totalprice: -1` → verificar se booking é criado (esperado: rejeição com 400) |
+| BUG-008 | `POST /booking` (datas invertidas) | 200 OK — aceito sem validação | 400 Bad Request | Média | Aberto | `POST /booking` com `checkin` posterior a `checkout` → verificar se datas são validadas |
+| BUG-009 | Respostas de erro 4xx/5xx | `text/plain` | `application/json` | Baixa | Aberto | Qualquer requisição que retorne 404, 403 ou 500 → verificar header `Content-Type` da resposta |
 
 > Análise completa com todas as dimensões VADER: `teste_api/docs/vader-analysis.md`
 > Registro completo de bugs e riscos: `teste_api/docs/bugs-and-risks.md`
