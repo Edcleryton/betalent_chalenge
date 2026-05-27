@@ -82,7 +82,7 @@ const html = `<!DOCTYPE html>
     <div class="stat f"><div class="num">${failed}</div><div class="lbl">Falhou</div></div>
   </div>
   ${failSection}
-  <div class="footer">BeTalent QA · Newman · Restful-Booker</div>
+  <div class="footer">QA Automation Lab · Newman · Restful-Booker</div>
 </body>
 </html>`;
 

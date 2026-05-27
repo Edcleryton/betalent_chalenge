@@ -98,7 +98,7 @@ jobs:
           to: edcleryton.gabriel@gmail.com
           from: edcleryton.gabriel@gmail.com
           html_body: |
-            <h2>Playwright Tests — BeTalent QA Suite</h2>
+            <h2>Playwright Tests — QA Automation Lab Suite</h2>
             <table cellpadding="6" cellspacing="0" style="border-collapse:collapse">
               <tr>
                 <td><b>Pipeline</b></td>

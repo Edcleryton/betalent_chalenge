@@ -1,6 +1,6 @@
-# Relatório Sumário de Testes — BeTalent QA
+# Relatório Sumário de Testes — QA Automation Lab
 
-**Referência:** TSR-BeTalent-2026-001
+**Referência:** TSR-QA-LAB-2026-001
 **Planos de Teste de Referência:** `docs/UI_TEST_PLAN.md`, `docs/API_TEST_PLAN.md`
 **Escopo:** Sauce Demo (UI) + Restful-Booker (API)
 **Período de Execução:** 2026-05-01 a 2026-05-12
@@ -11,7 +11,7 @@
 
 ## 1. Objetivo
 
-Consolidar os resultados da execução da suíte de testes automatizados do projeto BeTalent QA, documentando o nível de qualidade atingido, os incidentes encontrados e a avaliação de conformidade dos sistemas testados.
+Consolidar os resultados da execução da suíte de testes automatizados do projeto QA Automation Lab, documentando o nível de qualidade atingido, os incidentes encontrados e a avaliação de conformidade dos sistemas testados.
 
 ---
 

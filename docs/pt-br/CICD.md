@@ -22,7 +22,7 @@ Após cada execução, independente do resultado, um email é enviado para o ema
 
 Acesse: **Settings → Secrets and variables → Actions → New repository secret**
 
-URL direta: `https://github.com/seu-usuário/betalent_chalenge/settings/secrets/actions`
+URL direta: `https://github.com/seu-usuário/qa-automation-lab/settings/secrets/actions`
 
 | Secret | Valor | Usado em |
 |---|---|---|
@@ -51,7 +51,7 @@ O Gmail exige uma **senha de aplicativo** específica para envio via SMTP extern
 1. Acesse [myaccount.google.com](https://myaccount.google.com) → **Segurança**
 2. Verifique se **Verificação em duas etapas** está ativa (obrigatório)
 3. Na barra de busca da página, pesquise **"Senhas de app"**
-4. Clique em **Criar** → Nome: `GitHub Actions BeTalent`
+4. Clique em **Criar** → Nome: `GitHub Actions QA Lab`
 5. Copie a senha de **16 caracteres** gerada
 6. Cole no secret `MAIL_PASSWORD` no GitHub (sem espaços)
 

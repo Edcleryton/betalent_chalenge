@@ -1,139 +1,77 @@
-# BeTalent QA Test — API Testing (Restful-Booker)
+# QA Automation Lab — API Testing (Restful-Booker)
 
-Suíte completa de testes de API para o desafio prático de QA da BeTalent, cobrindo o sistema **Restful-Booker**. Inclui testes funcionais (CRUD), contrato (schema), segurança e relatório HTML automatizado via CI/CD.
+Complete API test suite developed for automation studies, covering the **Restful-Booker** system. Includes functional tests (CRUD), contract tests (schema), security, and automated HTML reporting via CI/CD.
 
 ---
 
-## Ferramentas Utilizadas
+## 🌍 Languages
+[🇧🇷 Português](./README.pt-br.md) | [🇩🇪 Deutsch](./README.de.md)
 
-| Ferramenta | Versão | Finalidade |
+---
+
+## Tools Used
+
+| Tool | Version | Purpose |
 |---|---|---|
-| **Postman** | — | Criação e organização da coleção de testes |
-| **Newman** | ^6.1.2 | Execução automatizada via CLI |
-| **newman-reporter-htmlextra** | ^1.22.11 | Geração de relatório HTML visual |
-| **GitHub Actions** | — | Pipeline de CI/CD automatizado |
-| **Node.js** | >= 20 | Ambiente de execução |
+| **Postman** | — | Creation and organization of the test collection |
+| **Newman** | ^6.1.2 | Automated execution via CLI |
+| **newman-reporter-htmlextra** | ^1.22.11 | Visual HTML report generation |
+| **GitHub Actions** | — | Automated CI/CD pipeline |
+| **Node.js** | >= 20 | Execution environment |
 
 ---
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 /
 ├── .github/
 │   └── workflows/
-│       └── api-tests.yml          # Pipeline CI/CD (GitHub Actions)
+│       └── api-tests.yml          # CI/CD Pipeline (GitHub Actions)
 ├── api_automation/
-│   ├── restful-booker.postman_collection.json   # Coleção Postman
-│   └── restful-booker.postman_environment.json  # Ambiente (variáveis)
+│   ├── restful-booker.postman_collection.json   # Postman Collection
+│   └── restful-booker.postman_environment.json  # Environment (variables)
 ├── docs/
-│   ├── api-testing.md             # Plano de teste e cenários
-│   ├── bugs-and-risks.md          # Bugs encontrados e análise de riscos
-│   ├── contract-testing.md        # Estratégia de testes de contrato
-│   ├── security-testing.md        # Estratégia de testes de segurança
-│   └── vader-analysis.md          # Análise VADER completa (27 requests × 5 dimensões)
-├── reports/                       # Gerado localmente após npm test (não versionado)
-│   └── report.html                # Relatório visual HTML
+│   ├── en/
+│   │   ├── api-testing.md
+│   │   ├── bugs-and-risks.md
+│   │   ├── contract-testing.md
+│   │   ├── security-testing.md
+│   │   └── vader-analysis.md
+├── reports/                       # Locally generated after npm test
+│   └── report.html                # Visual HTML report
 ├── package.json
 └── README.md
 ```
 
 ---
 
-## Pré-requisitos
+## Quick Start
 
-- **Node.js** >= 20 instalado ([download](https://nodejs.org/))
-- Conexão com a internet (a API é pública: `https://restful-booker.herokuapp.com`)
-
----
-
-## Como Executar
-
-### 1. Instalar dependências
+### 1. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Executar suíte completa (testes + relatório HTML)
+### 2. Run full suite (tests + HTML report)
 
 ```bash
 npm test
 ```
 
-Após a execução, a pasta `reports/` conterá o arquivo `report.html` — abra no browser para visualizar o relatório completo.
-
-### 3. Executar apenas via CLI (sem relatório HTML)
-
-```bash
-npm run test:cli
-```
-
-### 4. Executar via Postman UI
-
-1. Abra o Postman.
-2. Importe `api_automation/restful-booker.postman_collection.json`.
-3. Importe `api_automation/restful-booker.postman_environment.json`.
-4. Selecione o ambiente **Restful-Booker-Env**.
-5. Execute com o **Collection Runner**.
-
-> Os arquivos da pasta `api_automation/` são o ponto de entrada tanto para o Newman quanto para o Postman GUI.
-
----
-
-## Grupos de Teste
-
-A coleção possui **5 grupos** com **27 requests** e **53 asserções**:
-
-| Grupo | Requests | Cobertura |
-|---|---|---|
-| 1. Health Check | 1 | Disponibilidade do serviço |
-| 2. Auth | 2 | Geração de token, credenciais inválidas |
-| 3. Booking - CRUD & Filters | 11 | CRUD completo, filtros por nome e data, erros |
-| 4. Security Validations | 6 | Auth obrigatório, tokens inválidos, method tampering, header injection |
-| 5. Contract Tests | 7 | Validação de schema (tipos e campos) por endpoint |
-
----
-
-## Variáveis de Ambiente
-
-| Variável | Preenchida por | Finalidade |
-|---|---|---|
-| `base_url` | Ambiente (fixo) | URL base da API |
-| `token` | Auth - CreateToken | Token para requisições autenticadas |
-| `booking_id` | CreateBooking - JSON | ID da reserva do fluxo CRUD |
-| `contract_booking_id` | Contract - Setup | ID isolado para os testes de contrato |
-
 ---
 
 ## CI/CD
 
-O pipeline GitHub Actions (`.github/workflows/api-tests.yml` na raiz do repositório) executa automaticamente a cada `push`, `pull_request` na branch `master` e **diariamente às 08:00 UTC (05:00 BRT)**:
-
-1. Faz checkout do repositório
-2. Configura Node.js 20 com cache de dependências
-3. Instala dependências (`npm ci`)
-4. Executa a suíte (`npm test`)
-5. Faz upload do `report.html` como artifact (retido por 30 dias), mesmo em caso de falha
-6. Envia o relatório por email para `edcleryton.gabriel@gmail.com`
-
-> Guia completo de configuração de secrets e Gmail App Password: [docs/CICD.md](../../docs/CICD.md)
+The GitHub Actions pipeline (`.github/workflows/api-tests.yml` in the repository root) runs automatically on each `push` or `pull_request` to the `master` branch and **daily at 08:00 UTC (05:00 BRT)**.
 
 ---
 
-## Premissas
+## Additional Documentation
 
-- A API Restful-Booker está online em `https://restful-booker.herokuapp.com`.
-- O token é gerado dinamicamente a cada execução e armazenado em variável de ambiente.
-- Os dados criados nos testes CRUD e Contract são deletados ao final de cada grupo.
-- Bugs conhecidos da API estão documentados em `docs/bugs-and-risks.md`. Os testes afirmam o comportamento correto por RFC — enquanto o bug existir, o teste falha ativamente como sinal de rastreabilidade.
-
----
-
-## Documentação Adicional
-
-- [Plano de Teste e Cenários](docs/api-testing.md)
-- [Bugs Encontrados e Riscos](docs/bugs-and-risks.md)
-- [Análise VADER das 27 Requests](docs/vader-analysis.md)
-- [Estratégia de Testes de Contrato](docs/contract-testing.md)
-- [Estratégia de Testes de Segurança](docs/security-testing.md)
+- [Test Plan and Scenarios](docs/en/api-testing.md)
+- [Found Bugs and Risks](docs/en/bugs-and-risks.md)
+- [VADER Analysis of the 27 Requests](docs/en/vader-analysis.md)
+- [Contract Testing Strategy](docs/en/contract-testing.md)
+- [Security Testing Strategy](docs/en/security-testing.md)

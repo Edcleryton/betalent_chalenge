@@ -17,7 +17,7 @@ Os testes de segurança validam que a API Restful-Booker:
 | ID | Nome | Endpoint | Técnica | Esperado |
 |---|---|---|---|---|
 | SEC-001 | Write Without Auth | `PUT /booking/1` | Requisição sem nenhum header de autenticação | **403 Forbidden** |
-| SEC-002 | DeleteBooking - Invalid Token | `DELETE /booking/1` | Cookie com token forjado (`invalid_token_xyz_betalent_test`) | **403 Forbidden** |
+| SEC-002 | DeleteBooking - Invalid Token | `DELETE /booking/1` | Cookie com token forjado (`invalid_token_xyz_lab_test`) | **403 Forbidden** |
 | SEC-003 | Method Tampering | `POST /booking/1` | Método HTTP incorreto em rota de ID | **404 ou 405** |
 | SEC-003b | PatchBooking - No Auth | `PATCH /booking/1` | PATCH sem Cookie ou Authorization | **403 Forbidden** |
 | SEC-004 | Header Injection | `GET /booking` | Headers com payloads XSS e SQL Injection | **200** (estabilidade) |

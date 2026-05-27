@@ -32,17 +32,17 @@ Não é duplicação — são ferramentas para públicos diferentes:
 | Ferramenta | Propósito |
 |---|---|
 | **Playwright APIRequestContext** | Asserções programáticas, integração com CI/CD, relatório unificado com testes de UI |
-| **Postman/Newman** | Collection JSON (requisito explícito do desafio), demonstração de workflow para revisores não-técnicos, relatório HTML visual |
+| **Postman/Newman** | Collection JSON (requisito explícito do estudo), demonstração de workflow para revisores não-técnicos, relatório HTML visual |
 
 ### 2.3 O que ficou fora de escopo e por quê
 
 | Item | Motivo da exclusão |
 |---|---|
-| Testes de concorrência / carga | Fora do escopo do desafio; requereria infraestrutura de teste de carga (k6, Artillery) |
+| Testes de concorrência / carga | Fora do escopo do estudo; requereria infraestrutura de teste de carga (k6, Artillery) |
 | Rate limiting | Não documentado na especificação do Restful-Booker |
-| Paginação da listagem (`GET /booking`) | O desafio não requisitou; `GET /booking?firstname=` cobre a filtragem básica |
+| Paginação da listagem (`GET /booking`) | O estudo não requisitou; `GET /booking?firstname=` cobre a filtragem básica |
 | Token expirado / renovação | Restful-Booker não implementa expiração de token |
-| CORS e headers de segurança | Relevante em produção, fora do escopo de funcionalidade do desafio |
+| CORS e headers de segurança | Relevante em produção, fora do escopo de funcionalidade do estudo |
 
 ### 2.4 Decisão de Ferramentas
 

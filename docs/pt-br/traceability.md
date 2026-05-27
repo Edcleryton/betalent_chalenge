@@ -1,4 +1,4 @@
-# Matriz de Rastreabilidade — BeTalent QA
+# Matriz de Rastreabilidade — QA Automation Lab
 
 Mapeamento entre test cases, bugs confirmados e feature areas.
 Permite responder: "qual teste cobre qual bug?" e "qual feature tem mais problemas?".

@@ -44,7 +44,7 @@ O SauceDemo disponibiliza 6 personas de teste, cada uma simulando uma classe dif
 | Item | Motivo da exclusão |
 |---|---|
 | Pagamento real | SauceDemo não tem gateway de pagamento — o checkout finaliza sem cobrar |
-| Testes de carga/estresse | Fora do escopo do desafio; `performance_glitch_user` já cobre comportamento sob lentidão simulada |
+| Testes de carga/estresse | Fora do escopo do estudo; `performance_glitch_user` já cobre comportamento sob lentidão simulada |
 | Testes de API diretamente pela UI | SauceDemo usa dados estáticos; não há backend real para interceptar |
 | Visual_user em viewports mobile | Bugs visuais são CSS-level e se manifestam em desktop; mobile não adiciona novos casos para esta persona |
 

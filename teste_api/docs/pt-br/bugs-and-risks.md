@@ -44,6 +44,6 @@ Os testes afirmam o comportamento correto segundo a especificação REST (RFC 72
 
 ## 4. Conclusão
 
-A API cumpre bem seu papel didático para o desafio de QA, mas apresenta 6 bugs de status code que contradizem os padrões REST (RFC 7231). O BUG-004 (500 em payload inválido) é o mais crítico — indica ausência de validação de entrada e pode expor stack traces em produção. O BUG-003 (200 para credenciais inválidas) é o mais impactante em integração real, pois quebra a expectativa de qualquer client que verifique status code para detectar falha de autenticação.
+A API cumpre bem seu papel didático para estudos de QA, mas apresenta 6 bugs de status code que contradizem os padrões REST (RFC 7231). O BUG-004 (500 em payload inválido) é o mais crítico — indica ausência de validação de entrada e pode expor stack traces em produção. O BUG-003 (200 para credenciais inválidas) é o mais impactante em integração real, pois quebra a expectativa de qualquer client que verifique status code para detectar falha de autenticação.
 
 > A análise completa dimensão por dimensão (Verbs, Authorization, Data, Errors, Responsiveness) está em [vader-analysis.md](vader-analysis.md).

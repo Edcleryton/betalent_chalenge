@@ -1,7 +1,7 @@
 {
-  "name": "betalent-qa-test-api",
+  "name": "qa-automation-lab-api",
   "version": "1.0.0",
-  "description": "API testing project for BeTalent test using Postman and Newman",
+  "description": "API testing study project using Postman and Newman",
   "main": "index.js",
   "scripts": {
     "test": "newman run api_automation/restful-booker.postman_collection.json -e api_automation/restful-booker.postman_environment.json --reporters cli,htmlextra,json --reporter-htmlextra-export reports/report.html --reporter-json-export reports/results.json",

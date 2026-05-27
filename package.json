@@ -1,7 +1,7 @@
 {
-  "name": "betalent-qa-test",
+  "name": "qa-automation-lab",
   "version": "1.0.0",
-  "description": "BeTalent QA Practical Test — UI and API automation with Playwright",
+  "description": "QA Automation Studies — UI and API automation with Playwright",
   "author": "Edcleryton Silva",
   "license": "ISC",
   "scripts": {

@@ -111,7 +111,7 @@ const html = `<!DOCTYPE html>
 </style>
 </head>
 <body>
-  <h1>Playwright Tests — BeTalent QA Suite</h1>
+  <h1>Playwright Tests — QA Automation Lab Suite</h1>
   <div class="meta">Gerado em ${date} (BRT)</div>
   <div class="badge ${isPass ? 'pass' : 'fail'}">${isPass ? '✅ PASSOU' : '❌ FALHOU'}</div>
   <div class="stats">
@@ -121,7 +121,7 @@ const html = `<!DOCTYPE html>
     <div class="stat s"><div class="num">${totalSkipped}</div><div class="lbl">Pulou</div></div>
   </div>
   ${failSection}
-  <div class="footer">BeTalent QA · Playwright · api + chromium</div>
+  <div class="footer">QA Automation Lab · Playwright · api + chromium</div>
 </body>
 </html>`;
 
