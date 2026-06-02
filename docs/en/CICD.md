@@ -129,17 +129,17 @@ Useful examples:
 ### Newman Flow (`api-tests.yml`)
 
 ```
-checkout → setup Node 20 (npm cache) → npm ci → npm test
+checkout → setup Bun → bun install --frozen-lockfile → bun test
   → upload report.html (30d artifact) → email with report.html attached
 ```
 
 ### Playwright Flow (`playwright-tests.yml`)
 
 ```
-checkout → setup Node 20 (npm cache) → npm ci
+checkout → setup Bun → bun install --frozen-lockfile
   → cache Playwright browsers (~/.cache/ms-playwright)
-  → playwright install --with-deps chromium
-  → playwright test --project=api --project=chromium
+  → bunx playwright install --with-deps chromium
+  → bunx playwright test --project=api --project=chromium
   → zip playwright-report/ → upload playwright-report.zip (30d artifact)
   → generate-playwright-pdf.js → convert HTML → PDF
   → email with reports/summary.pdf attached

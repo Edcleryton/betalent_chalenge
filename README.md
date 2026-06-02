@@ -32,7 +32,7 @@
 
 ## Quick Start
 
-> Minimum steps to clone and run tests from scratch. Requires **Node.js 20.x LTS** or higher installed.
+> Minimum steps to clone and run tests from scratch. Requires **Bun 1.x** or higher installed.
 
 ```bash
 # 1. Clone the repository
@@ -40,31 +40,31 @@ git clone https://github.com/Edcleryton/qa-automation-lab.git
 cd qa-automation-lab
 
 # 2. Install Playwright dependencies
-npm install
-npx playwright install   # downloads Chromium, Firefox and WebKit
+bun install
+bunx playwright install   # downloads Chromium, Firefox and WebKit
 
 # 3. Create the environment variables file (mandatory)
 cp .env.example .env
 
 # 4. Run all tests (UI + API)
-npx playwright test
+bunx playwright test
 
 # 5. View report
-npx playwright show-report
+bunx playwright show-report
 ```
 
 For the Newman/Postman suite (folder `teste_api/`):
 
 ```bash
 # Install Newman and the reporter globally
-npm install -g newman
-npm install -g newman-reporter-htmlextra
+bun install -g newman
+bun install -g newman-reporter-htmlextra
 
 # Enter the folder, install local dependencies and run
 cd teste_api
-npm install
+bun install
 mkdir -p reports
-npm test
+bun test
 ```
 
 ---
@@ -96,8 +96,7 @@ Detailed coverage, prioritization criteria, and selection rationale: [`docs/en/U
 
 | Dependency | Recommended Version | Download | Verification |
 |---|---|---|---|
-| Node.js | **20.x LTS** (or 22.x LTS) | https://nodejs.org/en/download | `node --version` |
-| npm | 10.x | — | `npm --version` |
+| Bun | **1.x** | https://bun.sh | `bun --version` |
 | Git | 2.x | https://git-scm.com/downloads | `git --version` |
 
 ---
@@ -109,13 +108,13 @@ Detailed coverage, prioritization criteria, and selection rationale: [`docs/en/U
 **Step 1 — Install Playwright browsers**
 
 ```bash
-npx playwright install
+bunx playwright install
 ```
 
 **Step 2 — Verify installation**
 
 ```bash
-npx playwright --version
+bunx playwright --version
 ```
 
 **Step 3 — Create environment variables file**
@@ -176,12 +175,13 @@ A total of 9 API bugs and several UI bugs per persona were identified and docume
 *   **Playwright:** Unified stack for UI and API.
 *   **POM:** Page Object Model for easier maintenance.
 *   **VADER:** Heuristic for comprehensive API testing.
+*   **Bun:** Fast all-in-one JavaScript runtime.
 
 ---
 
 ## 11. Tools Used
 
-Playwright, TypeScript, @axe-core/playwright, Postman, Newman, GitHub Actions.
+Playwright, TypeScript, @axe-core/playwright, Postman, Newman, GitHub Actions, Bun.
 
 ---
 

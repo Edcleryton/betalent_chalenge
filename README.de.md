@@ -1,10 +1,10 @@
 # QA Automation Lab — Automatisierte Testsuite
 
-**Projekt:** Studien zur QA-Automatisierung  
+**Projekt:** QA-Automatisierungsstudien  
 **Autor:** Edcleryton Silva  
 **Kontakt:** edcleryton.gabriel@gmail.com  
 **Version:** 1.0.0  
-**Datum:** 2026-05-12  
+**Datum:** 12.05.2026  
 
 ---
 
@@ -25,53 +25,53 @@
 8. [Testabdeckung](#8-testabdeckung)
 9. [Identifizierte Bugs](#9-identifizierte-bugs)
 10. [Technische Entscheidungen](#10-technische-entscheidungen)
-11. [Verwendete Werkzeuge](#11-verwendete-werkzeuge)
+11. [Verwendete Tools](#11-verwendete-tools)
 12. [Zusätzliche Dokumentation](#12-zusätzliche-dokumentation)
 
 ---
 
-## Schnellstart
+## Quick Start (Schnellstart)
 
-> Mindestschritte zum Klonen und Ausführen von Tests. Erfordert **Node.js 20.x LTS** oder höher.
+> Mindestschritte zum Klonen und Ausführen von Tests von Grund auf. Erfordert die Installation von **Bun 1.x** oder höher.
 
 ```bash
-# 1. Repository klonen
+# 1. Klonen Sie das Repository
 git clone https://github.com/Edcleryton/qa-automation-lab.git
 cd qa-automation-lab
 
-# 2. Playwright-Abhängigkeiten installieren
-npm install
-npx playwright install   # lädt Chromium, Firefox und WebKit herunter
+# 2. Installieren Sie die Playwright-Abhängigkeiten
+bun install
+bunx playwright install   # lädt Chromium, Firefox und WebKit herunter
 
-# 3. Umgebungsfariablendatei erstellen (obligatorisch)
+# 3. Erstellen Sie die Umgebungsvariablendatei (obligatorisch)
 cp .env.example .env
 
-# 4. Alle Tests ausführen (UI + API)
-npx playwright test
+# 4. Führen Sie alle Tests aus (UI + API)
+bunx playwright test
 
 # 5. Bericht anzeigen
-npx playwright show-report
+bunx playwright show-report
 ```
 
 Für die Newman/Postman-Suite (Ordner `teste_api/`):
 
 ```bash
-# Newman und Reporter global installieren
-npm install -g newman
-npm install -g newman-reporter-htmlextra
+# Newman und den Reporter global installieren
+bun install -g newman
+bun install -g newman-reporter-htmlextra
 
-# In den Ordner wechseln, lokale Abhängigkeiten installieren und ausführen
+# Ordner betreten, lokale Abhängigkeiten installieren und ausführen
 cd teste_api
-npm install
+bun install
 mkdir -p reports
-npm test
+bun test
 ```
 
 ---
 
 ## 1. Überblick
 
-Dieses Repository enthält eine umfassende automatisierte Testsuite für UI und API, die für Studien und QA-Best-Practices entwickelt wurde. Ziel ist es, analytische Fähigkeiten, Testabdeckung, kritisches Denken und technische Organisation zu demonstrieren.
+Dieses Repository enthält eine automatisierte Testsuite für UI und API, die zum Studium von QA-Best-Practices entwickelt wurde. Ziel ist es, analytische Fähigkeiten, Testabdeckung, kritisches Denken und technische Organisation zu demonstrieren.
 
 **Systeme unter Test:**
 
@@ -84,11 +84,11 @@ Dieses Repository enthält eine umfassende automatisierte Testsuite für UI und 
 
 ## 2. Umfang
 
-**UI (Sauce Demo):** Alle Level-1- und Level-2-Anforderungen implementiert — Login, Sortierung, Checkout, Warenkorb, Navigation, Logout, Responsivität (Mobile Chrome / Mobile Safari) und Barrierefreiheit (WCAG über axe-core).
+**UI (Sauce Demo):** Alle Anforderungen der Level 1 und Level 2 implementiert — Login, Sortierung, Checkout, Warenkorb, Navigation, Logout, Responsivität (Mobile Chrome / Mobile Safari) und Barrierefreiheit (WCAG über axe-core).
 
-**API (Restful-Booker):** Alle Level-1- und Level-2-Anforderungen implementiert — Auth, CRUD, PATCH, Filter, Feldvalidierung, Sicherheit (403 ohne Token), Performance.
+**API (Restful-Booker):** Alle Anforderungen der Level 1 und Level 2 implementiert — Auth, CRUD, PATCH, Filter, Feldvalidierung, Sicherheit (403 ohne Token), Performance.
 
-Detaillierte Abdeckung, Priorisierungskriterien und Auswahlbegründung: [`docs/de/UI_TEST_PLAN.md`](./docs/de/UI_TEST_PLAN.md) und [`docs/de/API_TEST_PLAN.md`](./docs/de/API_TEST_PLAN.md).
+Detaillierte Abdeckung, Priorisierungskriterien und Auswahllogik: [`docs/de/UI_TEST_PLAN.md`](./docs/de/UI_TEST_PLAN.md) und [`docs/de/API_TEST_PLAN.md`](./docs/de/API_TEST_PLAN.md).
 
 ---
 
@@ -96,8 +96,7 @@ Detaillierte Abdeckung, Priorisierungskriterien und Auswahlbegründung: [`docs/d
 
 | Abhängigkeit | Empfohlene Version | Download | Verifizierung |
 |---|---|---|---|
-| Node.js | **20.x LTS** (oder 22.x LTS) | https://nodejs.org/en/download | `node --version` |
-| npm | 10.x | — | `npm --version` |
+| Bun | **1.x** | https://bun.sh | `bun --version` |
 | Git | 2.x | https://git-scm.com/downloads | `git --version` |
 
 ---
@@ -109,18 +108,18 @@ Detaillierte Abdeckung, Priorisierungskriterien und Auswahlbegründung: [`docs/d
 **Schritt 1 — Playwright-Browser installieren**
 
 ```bash
-npx playwright install
+bunx playwright install
 ```
 
 **Schritt 2 — Installation verifizieren**
 
 ```bash
-npx playwright --version
+bunx playwright --version
 ```
 
 **Schritt 3 — Umgebungsvariablendatei erstellen**
 
-Erstellen Sie im Stammverzeichnis des Projekts eine `.env`-Datei basierend auf `.env.example`.
+Erstellen Sie im Stammverzeichnis des Projekts eine `.env`-Datei auf der Grundlage von `.env.example`.
 
 ---
 
@@ -135,16 +134,16 @@ qa-automation-lab/
 │       └── api-tests.yml                   # CI/CD — Newman/Postman
 │
 ├── docs/                                   # Hauptdokumentation
-│   ├── pt-br/                              # Portugiesische Dokumente
-│   ├── en/                                 # Englische Dokumente (In Arbeit)
-│   └── de/                                 # Deutsche Dokumente (In Arbeit)
+│   ├── pt-br/                              # Docs auf Portugiesisch
+│   ├── en/                                 # Docs auf Englisch (In Arbeit)
+│   └── de/                                 # Docs auf Deutsch (In Arbeit)
 │
 ├── tests/
 │   ├── api/                                # API-Tests (Playwright)
 │   └── ui/                                 # UI-Tests (Playwright)
 │
 ├── teste_api/                              # Unabhängige Newman/Postman-Suite
-│   └── docs/                               # API-Dokumente (Mehrsprachig)
+│   └── docs/                               # API-Docs (Mehrsprachig)
 │
 ├── playwright.config.ts                    # Globale Playwright-Konfiguration
 ├── package.json
@@ -160,8 +159,8 @@ qa-automation-lab/
 *   **Personas:** standard, locked_out, problem, performance_glitch, error, visual.
 
 ### 8.2 API — Restful-Booker
-*   **Playwright API insgesamt:** 47
-*   **Postman/Newman:** 27 Requests / 56 Assertions.
+*   **Gesamt Playwright API:** 47
+*   **Postman/Newman:** 27 Anfragen / 56 Assertions.
 
 ---
 
@@ -176,15 +175,16 @@ Insgesamt wurden 9 API-Bugs und mehrere UI-Bugs pro Persona identifiziert und in
 *   **Playwright:** Einheitlicher Stack für UI und API.
 *   **POM:** Page Object Model für einfachere Wartung.
 *   **VADER:** Heuristik für umfassende API-Tests.
+*   **Bun:** Schnelle All-in-One JavaScript-Runtime.
 
 ---
 
-## 11. Verwendete Werkzeuge
+## 11. Verwendete Tools
 
-Playwright, TypeScript, @axe-core/playwright, Postman, Newman, GitHub Actions.
+Playwright, TypeScript, @axe-core/playwright, Postman, Newman, GitHub Actions, Bun.
 
 ---
 
 ## 12. Zusätzliche Dokumentation
 
-Weitere Informationen finden Sie im Ordner `docs/de/` für detaillierte Testpläne, die Rückverfolgbarkeitsmatrix und Fehlerberichte.
+Weitere Informationen finden Sie im Ordner `docs/de/` für detaillierte Testpläne, Rückverfolgbarkeitsmatrix und Bug-Berichte.

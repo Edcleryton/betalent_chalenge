@@ -129,17 +129,17 @@ Nützliche Beispiele:
 ### Newman-Ablauf (`api-tests.yml`)
 
 ```
-checkout → setup Node 20 (npm cache) → npm ci → npm test
+checkout → setup Bun → bun install --frozen-lockfile → bun test
   → upload report.html (30 Tage Artefakt) → E-Mail mit report.html im Anhang
 ```
 
 ### Playwright-Ablauf (`playwright-tests.yml`)
 
 ```
-checkout → setup Node 20 (npm cache) → npm ci
+checkout → setup Bun → bun install --frozen-lockfile
   → cache Playwright browsers (~/.cache/ms-playwright)
-  → playwright install --with-deps chromium
-  → playwright test --project=api --project=chromium
+  → bunx playwright install --with-deps chromium
+  → bunx playwright test --project=api --project=chromium
   → zip playwright-report/ → upload playwright-report.zip (30 Tage Artefakt)
   → generate-playwright-pdf.js → HTML zu PDF konvertieren
   → E-Mail mit reports/summary.pdf im Anhang

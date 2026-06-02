@@ -12,7 +12,7 @@ Suíte completa de testes de API, desenvolvida para estudos de automação, cobr
 | **Newman** | ^6.1.2 | Execução automatizada via CLI |
 | **newman-reporter-htmlextra** | ^1.22.11 | Geração de relatório HTML visual |
 | **GitHub Actions** | — | Pipeline de CI/CD automatizado |
-| **Node.js** | >= 20 | Ambiente de execução |
+| **Bun** | 1.x | Ambiente de execução |
 
 ---
 
@@ -40,7 +40,7 @@ Suíte completa de testes de API, desenvolvida para estudos de automação, cobr
 │   │   ├── contract-testing.md
 │   │   ├── security-testing.md
 │   │   └── vader-analysis.md
-├── reports/                       # Gerado localmente após npm test (não versionado)
+├── reports/                       # Gerado localmente após bun run test (não versionado)
 │   └── report.html                # Relatório visual HTML
 ├── package.json
 └── README.md
@@ -50,7 +50,7 @@ Suíte completa de testes de API, desenvolvida para estudos de automação, cobr
 
 ## Pré-requisitos
 
-- **Node.js** >= 20 instalado ([download](https://nodejs.org/))
+- **Bun** 1.x instalado ([download](https://bun.sh/))
 - Conexão com a internet (a API é pública: `https://restful-booker.herokuapp.com`)
 
 ---
@@ -60,13 +60,13 @@ Suíte completa de testes de API, desenvolvida para estudos de automação, cobr
 ### 1. Instalar dependências
 
 ```bash
-npm install
+bun install
 ```
 
 ### 2. Executar suíte completa (testes + relatório HTML)
 
 ```bash
-npm test
+bun run test
 ```
 
 Após a execução, a pasta `reports/` conterá o arquivo `report.html` — abra no browser para visualizar o relatório completo.
@@ -74,7 +74,7 @@ Após a execução, a pasta `reports/` conterá o arquivo `report.html` — abra
 ### 3. Executar apenas via CLI (sem relatório HTML)
 
 ```bash
-npm run test:cli
+bun run test:cli
 ```
 
 ### 4. Executar via Postman UI
@@ -119,9 +119,9 @@ A coleção possui **5 grupos** com **27 requests** e **53 asserções**:
 O pipeline GitHub Actions (`.github/workflows/api-tests.yml` na raiz do repositório) executa automaticamente a cada `push`, `pull_request` na branch `master` e **diariamente às 08:00 UTC (05:00 BRT)**:
 
 1. Faz checkout do repositório
-2. Configura Node.js 20 com cache de dependências
-3. Instala dependências (`npm ci`)
-4. Executa a suíte (`npm test`)
+2. Configura Bun 1.x
+3. Instala dependências (`bun install --frozen-lockfile`)
+4. Executa a suíte (`bun run test`)
 5. Faz upload do `report.html` como artifact (retido por 30 dias), mesmo em caso de falha
 6. Envia o relatório por email para `edcleryton.gabriel@gmail.com`
 

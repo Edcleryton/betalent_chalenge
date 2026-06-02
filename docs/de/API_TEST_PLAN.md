@@ -46,18 +46,19 @@ Es ist keine Duplizierung — es sind Werkzeuge für unterschiedliche Zielgruppe
 
 ### 2.4 Entscheidung für Werkzeuge
 
-**Newman + CI/CD:** Die GitHub Actions Pipeline führt `npm test` im Ordner `teste_api/` automatisch bei jedem Push aus, generiert einen HTML-Bericht und sendet ein PDF per E-Mail. Entscheidung: Der Bericht per E-Mail mit PDF wurde gewählt, da GitHub Actions Artefakte eine Authentifizierung zum Herunterladen erfordern — das PDF kommt direkt im Posteingang an.
+**Newman + CI/CD:** Die GitHub Actions Pipeline führt `bun test` im Ordner `teste_api/` automatisch bei jedem Push aus, generiert einen HTML-Bericht und sendet ein PDF per E-Mail. Entscheidung: Der Bericht per E-Mail mit PDF wurde gewählt, da GitHub Actions Artefakte eine Authentifizierung zum Herunterladen erfordern — das PDF kommt direkt im Posteingang an.
 
-### 2.5 Eintritts- und Austrittskriterien (ISO/IEC/IEEE 29119-3)
+### 2.5 Ein- und Ausstiegskriterien (ISO/IEC/IEEE 29119-3)
 
-**Eintrittskriterien — Bedingungen für den Start der Suite:**
+**Einstiegskriterien — Bedingungen zum Starten der Suite:**
 
 | Kriterium | Überprüfung |
 |---|---|
-| `.env`-Datei vorhanden und ausgefüllt | `cat .env` — `API_URL`, `API_USER`, `API_PASSWORD` definiert |
-| Restful-Booker erreichbar | `curl https://restful-booker.herokuapp.com/ping` liefert Status `201` |
-| Playwright installiert | `npx playwright --version` liefert ≥ 1.44.0 |
-| Newman installiert (Postman Suite) | `newman --version` liefert ≥ 6.1.2 |
+| `.env` Datei vorhanden und ausgefüllt | `cat .env` — `API_URL`, `API_USER`, `API_PASSWORD` definiert |
+| Restful-Booker erreichbar | `curl https://restful-booker.herokuapp.com/ping` gibt Status `201` zurück |
+| Bun installiert | `bun --version` gibt ≥ 1.0.0 zurück |
+| Newman installiert (Postman-Suite) | `newman --version` gibt ≥ 6.1.2 zurück |
+
 
 **Austrittskriterien — Bedingungen für das Ende des Zyklus:**
 
@@ -86,10 +87,9 @@ Es ist keine Duplizierung — es sind Werkzeuge für unterschiedliche Zielgruppe
 | Komponente | Anforderung |
 |---|---|
 | **Betriebssystem** | Windows 10+, macOS 12+, Ubuntu 22.04+ (CI: ubuntu-latest über GitHub Actions) |
-| **Node.js** | 20.x LTS oder höher (prüfen mit `node --version`) |
-| **npm** | 10.x im Lieferumfang von Node.js enthalten |
-| **Playwright** | ≥ 1.44.0 — Installation mit `npm install` im Root |
-| **Newman** | ≥ 6.1.2 — Installation mit `npm install` in `teste_api/` |
+| **Bun** | 1.x (prüfen mit `bun --version`) |
+| **Playwright** | ≥ 1.44.0 — Installation mit `bun install` im Root |
+| **Newman** | ≥ 6.1.2 — Installation mit `bun install` in `teste_api/` |
 | **Netzwerk** | Internetzugang zu `https://restful-booker.herokuapp.com` |
 | **Umgebungsvariablen** | `API_URL`, `API_USER`, `API_PASSWORD` (über `.env` im Root) |
 

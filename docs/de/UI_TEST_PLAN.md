@@ -60,8 +60,8 @@ SauceDemo stellt 6 Testpersonas zur Verfügung, die jeweils eine andere Risikokl
 |---|---|
 | `.env`-Datei vorhanden und ausgefüllt | `cat .env` — alle Benutzer- und Passwortvariablen definiert |
 | SauceDemo erreichbar | `curl -o /dev/null -s -w "%{http_code}" https://www.saucedemo.com` liefert `200` |
-| Playwright installiert | `npx playwright --version` liefert ≥ 1.44.0 |
-| Browser installiert | `npx playwright install` erfolgreich ausgeführt (Chromium, Chrome, WebKit) |
+| Playwright installiert | `bunx playwright --version` liefert ≥ 1.44.0 |
+| Browser installiert | `bunx playwright install` erfolgreich ausgeführt (Chromium, Chrome, WebKit) |
 | StorageState generiert | `playwright/.auth/user.json` existiert (generiert durch `auth.setup.ts`) |
 
 **Austrittskriterien — Bedingungen für das Ende des Zyklus:**
@@ -92,10 +92,9 @@ SauceDemo stellt 6 Testpersonas zur Verfügung, die jeweils eine andere Risikokl
 | Komponente | Anforderung |
 |---|---|
 | **Betriebssystem** | Windows 10+, macOS 12+, Ubuntu 22.04+ (CI: ubuntu-latest über GitHub Actions) |
-| **Node.js** | 20.x LTS oder höher (prüfen mit `node --version`) |
-| **npm** | 10.x im Lieferumfang von Node.js enthalten |
-| **Playwright** | ≥ 1.44.0 — Installation mit `npm install` |
-| **Browser** | Chromium (Desktop), Mobile Chrome (Pixel 5), Mobile Safari (iPhone 12) — Installation mit `npx playwright install` |
+| **Bun** | 1.x oder höher (prüfen mit `bun --version`) |
+| **Playwright** | ≥ 1.44.0 — Installation mit `bun install` |
+| **Browser** | Chromium (Desktop), Mobile Chrome (Pixel 5), Mobile Safari (iPhone 12) — Installation mit `bunx playwright install` |
 | **Netzwerk** | Internetzugang zu `https://www.saucedemo.com` |
 | **Umgebungsvariablen** | `UI_URL`, `UI_PASSWORD`, `STANDARD_USER`, `LOCKED_OUT_USER`, `PROBLEM_USER`, `PERFORMANCE_GLITCH_USER`, `ERROR_USER`, `VISUAL_USER` (über `.env`) |
 

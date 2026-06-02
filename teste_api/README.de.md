@@ -17,7 +17,7 @@ Vollständige API-Testsuite, entwickelt für Automatisierungsstudien, die das **
 | **Newman** | ^6.1.2 | Automatisierte Ausführung über CLI |
 | **newman-reporter-htmlextra** | ^1.22.11 | Visuelle HTML-Berichtserstellung |
 | **GitHub Actions** | — | Automatisierte CI/CD-Pipeline |
-| **Node.js** | >= 20 | Ausführungsumgebung |
+| **Bun** | 1.x | Ausführungsumgebung |
 
 ---
 
@@ -38,7 +38,7 @@ Vollständige API-Testsuite, entwickelt für Automatisierungsstudien, die das **
 │   │   ├── contract-testing.md
 │   │   ├── security-testing.md
 │   │   └── vader-analysis.md
-├── reports/                       # Lokal nach npm test generiert
+├── reports/                       # Lokal nach bun run test generiert
 │   └── report.html                # Visueller HTML-Bericht
 ├── package.json
 └── README.md
@@ -51,13 +51,13 @@ Vollständige API-Testsuite, entwickelt für Automatisierungsstudien, die das **
 ### 1. Abhängigkeiten installieren
 
 ```bash
-npm install
+bun install
 ```
 
 ### 2. Vollständige Suite ausführen (Tests + HTML-Bericht)
 
 ```bash
-npm test
+bun run test
 ```
 
 ---

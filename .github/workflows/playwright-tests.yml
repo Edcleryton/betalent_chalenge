@@ -1,4 +1,4 @@
-name: Playwright Tests — UI + API
+name: Playwright Tests � UI + API
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [master]
   schedule:
-    - cron: '0 8 * * *'   # diariamente às 08:00 UTC (05:00 BRT)
+    - cron: '0 8 * * *'   # diariamente �s 08:00 UTC (05:00 BRT)
 
 jobs:
   playwright-tests:
@@ -30,28 +30,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: '20'
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-chromium-${{ hashFiles('package-lock.json') }}
+          key: playwright-chromium-${{ hashFiles('bun.lock') }}
           restore-keys: playwright-chromium-
 
       - name: Install Playwright Chromium browser + OS deps
-        run: npx playwright install --with-deps chromium
+        run: bunx playwright install --with-deps chromium
 
       - name: Run Playwright tests (api + chromium)
         id: run_tests
-        run: npx playwright test --project=api --project=chromium
+        run: bunx playwright test --project=api --project=chromium
 
       - name: Zip Playwright report
         if: always()
@@ -67,7 +66,7 @@ jobs:
 
       - name: Generate PDF summary
         if: always()
-        run: node scripts/generate-playwright-pdf.js
+        run: bun scripts/generate-playwright-pdf.js
 
       - name: Convert summary to PDF
         if: always()
@@ -92,21 +91,21 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: >-
-            ${{ steps.run_tests.outcome == 'success' && '✅' || '⚠️' }}
-            Playwright Tests — Run #${{ github.run_number }} —
+            ${{ steps.run_tests.outcome == 'success' && '?' || '??' }}
+            Playwright Tests � Run #${{ github.run_number }} �
             ${{ steps.run_tests.outcome == 'success' && 'todos passaram' || 'falhas nos testes' }}
           to: edcleryton.gabriel@gmail.com
           from: edcleryton.gabriel@gmail.com
           html_body: |
-            <h2>Playwright Tests — QA Automation Lab Suite</h2>
+            <h2>Playwright Tests � QA Automation Lab Suite</h2>
             <table cellpadding="6" cellspacing="0" style="border-collapse:collapse">
               <tr>
                 <td><b>Pipeline</b></td>
-                <td>✅ Executado com sucesso</td>
+                <td>? Executado com sucesso</td>
               </tr>
               <tr>
                 <td><b>Testes</b></td>
-                <td>${{ steps.run_tests.outcome == 'success' && '✅ Todos passaram' || '⚠️ Falhas detectadas nos testes' }}</td>
+                <td>${{ steps.run_tests.outcome == 'success' && '? Todos passaram' || '?? Falhas detectadas nos testes' }}</td>
               </tr>
               <tr><td><b>Projetos</b></td><td>api, chromium</td></tr>
               <tr><td><b>Trigger</b></td><td>${{ github.event_name }}</td></tr>
@@ -129,4 +128,6 @@ jobs:
             <p style="margin-top:12px;font-size:12px;color:#555">
               Resumo em PDF anexado. Relatório HTML completo disponível nos artifacts do GitHub Actions.
             </p>
+
           attachments: reports/summary.pdf
+s/summary.pdf

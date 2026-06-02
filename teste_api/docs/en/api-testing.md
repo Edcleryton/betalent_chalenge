@@ -97,9 +97,9 @@ Isolated tests in the **5. Contract Tests** group that validate the JSON schema 
 ## 8. Automation Strategy
 
 - **Collection:** Postman v2.1 (`restful-booker.postman_collection.json`)
-- **Execution:** `npm test` → Newman with htmlextra reporter
+- **Execution:** `bun run test` → Newman with htmlextra reporter
 - **Report:** `reports/report.html` generated automatically
-- **CI/CD:** GitHub Actions — runs on every `push`/`PR` to `main`
+- **CI/CD:** GitHub Actions — runs on every `push`/`PR` to `master`
 - **Assertions:** Chai (available natively in Postman/Newman sandbox)
 - **Schema:** Manual validation of properties and types (no external dependency on tv4/ajv)
 

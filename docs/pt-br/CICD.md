@@ -129,17 +129,17 @@ Exemplos úteis:
 ### Fluxo Newman (`api-tests.yml`)
 
 ```
-checkout → setup Node 20 (cache npm) → npm ci → npm test
+checkout → setup Bun → bun install --frozen-lockfile → bun test
   → upload report.html (artifact 30d) → email com report.html anexado
 ```
 
 ### Fluxo Playwright (`playwright-tests.yml`)
 
 ```
-checkout → setup Node 20 (cache npm) → npm ci
+checkout → setup Bun → bun install --frozen-lockfile
   → cache Playwright browsers (~/.cache/ms-playwright)
-  → playwright install --with-deps chromium
-  → playwright test --project=api --project=chromium
+  → bunx playwright install --with-deps chromium
+  → bunx playwright test --project=api --project=chromium
   → zip playwright-report/ → upload playwright-report.zip (artifact 30d)
   → generate-playwright-pdf.js → converter HTML → PDF
   → email com reports/summary.pdf anexado

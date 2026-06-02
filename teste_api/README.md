@@ -17,7 +17,7 @@ Complete API test suite developed for automation studies, covering the **Restful
 | **Newman** | ^6.1.2 | Automated execution via CLI |
 | **newman-reporter-htmlextra** | ^1.22.11 | Visual HTML report generation |
 | **GitHub Actions** | — | Automated CI/CD pipeline |
-| **Node.js** | >= 20 | Execution environment |
+| **Bun** | 1.x | Execution environment |
 
 ---
 
@@ -38,7 +38,7 @@ Complete API test suite developed for automation studies, covering the **Restful
 │   │   ├── contract-testing.md
 │   │   ├── security-testing.md
 │   │   └── vader-analysis.md
-├── reports/                       # Locally generated after npm test
+├── reports/                       # Locally generated after bun run test
 │   └── report.html                # Visual HTML report
 ├── package.json
 └── README.md
@@ -51,13 +51,13 @@ Complete API test suite developed for automation studies, covering the **Restful
 ### 1. Install dependencies
 
 ```bash
-npm install
+bun install
 ```
 
 ### 2. Run full suite (tests + HTML report)
 
 ```bash
-npm test
+bun run test
 ```
 
 ---

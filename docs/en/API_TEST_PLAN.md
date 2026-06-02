@@ -46,7 +46,7 @@ It is not duplication — they are tools for different audiences:
 
 ### 2.4 Tooling Decision
 
-**Newman + CI/CD:** GitHub Actions pipeline runs `npm test` in the `teste_api/` folder automatically on each push, generating an HTML report and sending a PDF by email. Decision: email report with PDF was adopted because GitHub Actions artifacts require authentication for download — the PDF arrives directly in the inbox.
+**Newman + CI/CD:** GitHub Actions pipeline runs `bun test` in the `teste_api/` folder automatically on each push, generating an HTML report and sending a PDF by email. Decision: email report with PDF was adopted because GitHub Actions artifacts require authentication for download — the PDF arrives directly in the inbox.
 
 ### 2.5 Entry and Exit Criteria (ISO/IEC/IEEE 29119-3)
 
@@ -56,7 +56,7 @@ It is not duplication — they are tools for different audiences:
 |---|---|
 | `.env` file present and filled | `cat .env` — `API_URL`, `API_USER`, `API_PASSWORD` defined |
 | Restful-Booker accessible | `curl https://restful-booker.herokuapp.com/ping` returns status `201` |
-| Playwright installed | `npx playwright --version` returns ≥ 1.44.0 |
+| Bun installed | `bun --version` returns ≥ 1.0.0 |
 | Newman installed (Postman suite) | `newman --version` returns ≥ 6.1.2 |
 
 **Exit Criteria — conditions to end the cycle:**
@@ -86,10 +86,9 @@ It is not duplication — they are tools for different audiences:
 | Component | Requirement |
 |---|---|
 | **Operating System** | Windows 10+, macOS 12+, Ubuntu 22.04+ (CI: ubuntu-latest via GitHub Actions) |
-| **Node.js** | 20.x LTS or higher (verify with `node --version`) |
-| **npm** | 10.x included with Node.js |
-| **Playwright** | ≥ 1.44.0 — install with `npm install` at root |
-| **Newman** | ≥ 6.1.2 — install with `npm install` in `teste_api/` |
+| **Bun** | 1.x (verify with `bun --version`) |
+| **Playwright** | ≥ 1.44.0 — install with `bun install` at root |
+| **Newman** | ≥ 6.1.2 — install with `bun install` in `teste_api/` |
 | **Network** | Internet access to `https://restful-booker.herokuapp.com` |
 | **Environment Variables** | `API_URL`, `API_USER`, `API_PASSWORD` (via `.env` at root) |
 
